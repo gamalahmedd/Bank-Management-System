@@ -156,6 +156,7 @@ public class VerifyUsers extends javax.swing.JFrame {
         pagination1.setForeground(new java.awt.Color(0, 0, 255));
         getContentPane().add(pagination1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 720, -1, -1));
 
+        txtSearch.setAnimationColor(new java.awt.Color(0, 0, 255));
         txtSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSearchActionPerformed(evt);

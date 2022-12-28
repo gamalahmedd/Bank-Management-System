@@ -152,6 +152,8 @@ public class UserDelete extends javax.swing.JFrame {
         pagination1.setBackground(new java.awt.Color(0, 0, 255));
         pagination1.setForeground(new java.awt.Color(0, 0, 255));
         getContentPane().add(pagination1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 730, -1, -1));
+
+        txtSearch.setAnimationColor(new java.awt.Color(0, 0, 255));
         getContentPane().add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(503, 86, 469, -1));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/tinywow_SL-0212121-40670-68_7888141_1.jpg"))); // NOI18N
