@@ -31,7 +31,6 @@ public class AllClientDetails extends javax.swing.JFrame {
             @Override
             public void onPressed(EventCallBack call) {
                 String register = txtRegisterDate.getText();
-                dateChooser1.disable();
                 getAllRecords(register, 1);
             }
 
@@ -88,20 +87,15 @@ public class AllClientDetails extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dateChooser1 = new com.raven.datechooser.DateChooser();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         txtRegisterDate = new swing.TextFieldAnimation();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         pagination1 = new pagination.Pagination();
         btnExit = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-
-        dateChooser1.setForeground(new java.awt.Color(0, 0, 255));
-        dateChooser1.setDateFormat("yyyy-MM-dd");
-        dateChooser1.setTextRefernce(txtRegisterDate);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -122,16 +116,13 @@ public class AllClientDetails extends javax.swing.JFrame {
         jLabel2.setText("Register Date:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, -1, -1));
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("YYYY-MM-DD");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 160, -1, -1));
+
         txtRegisterDate.setAnimationColor(new java.awt.Color(0, 0, 255));
         getContentPane().add(txtRegisterDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 150, 474, -1));
-
-        jButton1.setText("..");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 150, -1, 39));
 
         jTable1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -165,10 +156,6 @@ public class AllClientDetails extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dateChooser1.showPopup();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         setVisible(false);
         new Home(usermail).setVisible(true);
@@ -189,11 +176,10 @@ public class AllClientDetails extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
-    private com.raven.datechooser.DateChooser dateChooser1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private pagination.Pagination pagination1;
