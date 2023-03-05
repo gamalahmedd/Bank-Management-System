@@ -12,6 +12,14 @@ public class Login extends javax.swing.JFrame {
 
     public String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
 
+    public void setEmail(String email){
+        txtEmail.setText(email);
+    }
+    
+    public void setPassword(String password){
+        txtPassword.setText(password);
+    }
+    
     public Login() {
         initComponents();
         btnLogin.setEnabled(false);

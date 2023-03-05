@@ -18,7 +18,7 @@ public class UserDao {
 
     public static void save(User user) {
         String query = "insert into user(name,email,mobileNumber,address,password,securityQuestion,answer,status) values('" + user.getName() + "','" + user.getEmail() + "','" + user.getMobileNumber() + "','" + user.getAddress() + "','" + user.getPassword() + "','" + user.getSecurityQuestion() + "','" + user.getAnswer() + "','" + user.getStatus() + "')";
-        ResultSet rs = DbOperations.getData(query);
+        DbOperations.setDataOrDelete(query, "Saved Successfully");
     }
     
     public static User login(String email, String password) {
