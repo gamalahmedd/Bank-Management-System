@@ -18,7 +18,12 @@ public class UserDao {
 
     public static void save(User user) {
         String query = "insert into user(name,email,mobileNumber,address,password,securityQuestion,answer,status) values('" + user.getName() + "','" + user.getEmail() + "','" + user.getMobileNumber() + "','" + user.getAddress() + "','" + user.getPassword() + "','" + user.getSecurityQuestion() + "','" + user.getAnswer() + "','" + user.getStatus() + "')";
-        DbOperations.setDataOrDelete(query, "Saved Successfully");
+        if(checkDuplicatedEmail(user.getEmail())){
+            JOptionPane.showMessageDialog(null, "Email is already exist");
+        }
+        else{
+            DbOperations.setDataOrDelete(query, "Saved Successfully");
+        }
     }
     
     public static User login(String email, String password) {
@@ -86,5 +91,20 @@ public class UserDao {
     public static void delete(String email) {
         String query = "delete from user where email = '" + email + "'";
         DbOperations.setDataOrDelete(query, "User Deleted Successfully");
+    }
+    
+    private static boolean checkDuplicatedEmail(String email){
+        String query = "select *from email where email = '"+email+"'";
+        ResultSet rs = DbOperations.getData(query);
+        boolean duplicated = false;
+        try{
+            if(rs.next()){
+                duplicated = true;
+            }
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        return duplicated;
     }
 }

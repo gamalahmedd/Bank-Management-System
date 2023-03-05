@@ -89,7 +89,7 @@ public class UserDaoTest {
                 UserDao.save(user);
             }
         } catch (Exception e) {
-            fail("the test is a prototype");
+            fail("The test case failed");
         }
     }
 
