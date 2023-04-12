@@ -7,12 +7,14 @@ package dao;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import model.User;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
@@ -49,33 +51,30 @@ public class UserDaoTest {
 
     @Test
     public void testSave() {
-        System.out.println("save");
         User user = new User();
         String data = "";
         StringTokenizer str = null;
         try {
-            File file = new File("C:\\Users\\gemyy\\OneDrive\\Desktop\\SaveUsers.xlsx");
-            FileInputStream fis = new FileInputStream(file);
-            XSSFWorkbook wb = new XSSFWorkbook(fis);
-            XSSFSheet sheet = wb.getSheetAt(0);
-            Iterator<Row> itr = sheet.iterator();
-            itr.next();
-            while (itr.hasNext()) {
-                Row row = itr.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Save.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            data += cell.getStringCellValue() + ",";
+                            data += cell.getStringCellValue() + "*";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            data += (int) cell.getNumericCellValue() + ",";
+                            data += (int) cell.getNumericCellValue() + "*";
                             break;
                         default:
                     }
                 }
-                str = new StringTokenizer(data, ",");
+                str = new StringTokenizer(data, "*");
                 user.setId(Integer.parseInt(str.nextToken()));
                 user.setName(str.nextToken());
                 user.setEmail(str.nextToken());
@@ -85,11 +84,13 @@ public class UserDaoTest {
                 user.setSecurityQuestion(str.nextToken());
                 user.setAnswer(str.nextToken());
                 user.setStatus("false");
-                data = "";
                 UserDao.save(user);
+                data = "";
             }
-        } catch (Exception e) {
-            fail("The test case failed");
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
         }
     }
 

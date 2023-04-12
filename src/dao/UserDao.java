@@ -16,13 +16,24 @@ import java.util.Random;
 
 public class UserDao {
 
+    public static String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
+    public static String mobileNumberPattern = "^1[0125][0-9]{8}$"; //-> Valid Number 01153212712
+    public static String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"; // at least one digit, at least 8 characters, at least one lowercase, at least uppercase, at least one special character
+    public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
+    public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
+    
+    
     public static void save(User user) {
         String query = "insert into user(name,email,mobileNumber,address,password,securityQuestion,answer,status) values('" + user.getName() + "','" + user.getEmail() + "','" + user.getMobileNumber() + "','" + user.getAddress() + "','" + user.getPassword() + "','" + user.getSecurityQuestion() + "','" + user.getAnswer() + "','" + user.getStatus() + "')";
         if(checkDuplicatedEmail(user.getEmail())){
             JOptionPane.showMessageDialog(null, "Email is already exist");
         }
-        else{
+        else if (user.getName().matches(namePattern) && user.getEmail().matches(emailPattern) && user.getMobileNumber().matches(mobileNumberPattern) && user.getAddress().matches(addressPattern) && user.getPassword().matches(passwordPattern) && !user.getSecurityQuestion().equals("") && !user.getAnswer().equals(""))
+        {
             DbOperations.setDataOrDelete(query, "Saved Successfully");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Invalid data");
         }
     }
     
@@ -94,7 +105,7 @@ public class UserDao {
     }
     
     private static boolean checkDuplicatedEmail(String email){
-        String query = "select *from email where email = '"+email+"'";
+        String query = "select *from user where email = '"+email+"'";
         ResultSet rs = DbOperations.getData(query);
         boolean duplicated = false;
         try{

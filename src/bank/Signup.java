@@ -10,8 +10,11 @@ import javax.swing.ImageIcon;
 
 public class Signup extends javax.swing.JFrame {
 
-    public String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
-    public String mobileNumberPattern = "^01[0125][0-9]{8}$";
+    public String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
+    public String mobileNumberPattern = "^01[0125][0-9]{8}$"; //-> Valid Number 01153212712
+    public String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"; // at least one digit, at least 8 characters, at least one lowercase, at least uppercase, at least one special character
+    public String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
+    public String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
 
     public Signup() {
         initComponents();
@@ -39,7 +42,7 @@ public class Signup extends javax.swing.JFrame {
         String password = txtPassword.getText();
         String securityQuestion = txtSecurityQuestion.getText();
         String answer = txtAnswer.getText();
-        if (!name.equals("") && email.matches(emailPattern) && mobileNumber.matches(mobileNumberPattern) && mobileNumber.length() == 11 && !address.equals("") && !password.equals("") && !securityQuestion.equals("") && !answer.equals("")) {
+        if (name.matches(namePattern) && email.matches(emailPattern) && mobileNumber.matches(mobileNumberPattern) && mobileNumber.length() == 11 && address.matches(addressPattern) && password.matches(passwordPattern) && !securityQuestion.equals("") && !answer.equals("")) {
             btnSave.setEnabled(true);
         } else {
             btnSave.setEnabled(false);
@@ -94,7 +97,7 @@ public class Signup extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Mobile Numer:");
+        jLabel4.setText("Mobile Number:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(399, 346, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N

@@ -109,7 +109,7 @@ public class addNewClient extends javax.swing.JFrame {
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 85, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setText("Addresss");
+        jLabel5.setText("Address");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 234, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -146,7 +146,7 @@ public class addNewClient extends javax.swing.JFrame {
         getContentPane().add(txtAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 231, 208, -1));
 
         CombGender.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CombGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female", "Others" }));
+        CombGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
         getContentPane().add(CombGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 279, 208, -1));
 
         txtPhoneNumber.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
