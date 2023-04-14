@@ -52,7 +52,10 @@ public class UserDaoTest {
     @Test
     public void testSave() {
         User user = new User();
+        ArrayList<User> userList = new ArrayList<>();
+        User userTest = new User("Gamal Ahmed", "gemyy555@gmail.com", "1159553525", "25 Elharameen, Cairo, EG 62511", "Abcdef12@", "What's your father name?", "Ahmed", "false");
         String data = "";
+        int i = 0;
         StringTokenizer str = null;
         try {
             FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Save.xlsx");
@@ -75,7 +78,6 @@ public class UserDaoTest {
                     }
                 }
                 str = new StringTokenizer(data, "*");
-                user.setId(Integer.parseInt(str.nextToken()));
                 user.setName(str.nextToken());
                 user.setEmail(str.nextToken());
                 user.setMobileNumber(str.nextToken());
@@ -84,12 +86,21 @@ public class UserDaoTest {
                 user.setSecurityQuestion(str.nextToken());
                 user.setAnswer(str.nextToken());
                 user.setStatus("false");
-                UserDao.save(user);
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testUser(user));
+                        UserDao.save(user);
+                        i++;
+                    } else {
+                        assertEquals(false, User.testUser(user));
+                        UserDao.save(user);
+                    }
+                }
                 data = "";
             }
             workbook.close();
             file.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("fail test case");
         }
     }
