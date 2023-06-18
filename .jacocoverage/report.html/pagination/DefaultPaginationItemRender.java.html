@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultPaginationItemRender.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bank-Management-System&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">pagination</a> &gt; <span class="el_source">DefaultPaginationItemRender.java</span></div><h1>DefaultPaginationItemRender.java</h1><pre class="source lang-java linenums">package pagination;
+
+import javax.swing.Icon;
+import javax.swing.JButton;
+
+<span class="nc" id="L6">public class DefaultPaginationItemRender implements PaginationItemRender {</span>
+
+    @Override
+    public JButton createPaginationItem(Object value, boolean isPrevious, boolean isNext, boolean enable) {
+<span class="nc" id="L10">        JButton cmd = createButton(value, isPrevious, isNext, enable);</span>
+<span class="nc bnc" id="L11" title="All 2 branches missed.">        if (isPrevious) {</span>
+<span class="nc" id="L12">            Object icon = createPreviousIcon();</span>
+<span class="nc bnc" id="L13" title="All 2 branches missed.">            if (icon != null) {</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">                if (icon instanceof Icon) {</span>
+<span class="nc" id="L15">                    cmd.setIcon((Icon) icon);</span>
+                } else {
+<span class="nc" id="L17">                    cmd.setText(icon.toString());</span>
+                }
+            }
+<span class="nc bnc" id="L20" title="All 2 branches missed.">        } else if (isNext) {</span>
+<span class="nc" id="L21">            Object icon = createNextIcon();</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">            if (icon != null) {</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">                if (icon instanceof Icon) {</span>
+<span class="nc" id="L24">                    cmd.setIcon((Icon) icon);</span>
+                } else {
+<span class="nc" id="L26">                    cmd.setText(icon.toString());</span>
+                }
+            }
+<span class="nc" id="L29">        } else {</span>
+<span class="nc" id="L30">            cmd.setText(value.toString());</span>
+        }
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (!enable) {</span>
+<span class="nc" id="L33">            cmd.setFocusable(false);</span>
+        }
+<span class="nc" id="L35">        return cmd;</span>
+    }
+
+    @Override
+    public JButton createButton(Object value, boolean isPrevious, boolean isNext, boolean enable) {
+<span class="nc" id="L40">        return new JButton();</span>
+    }
+
+    @Override
+    public Object createPreviousIcon() {
+<span class="nc" id="L45">        return &quot;Previous&quot;;</span>
+    }
+
+    @Override
+    public Object createNextIcon() {
+<span class="nc" id="L50">        return &quot;Next&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

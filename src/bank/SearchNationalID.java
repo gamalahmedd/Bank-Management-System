@@ -419,7 +419,7 @@ public class SearchNationalID extends javax.swing.JFrame {
         client.setCity(txtCity.getText());
         client.setOccupation(txtOccupation.getText());
         client.setRegisterdate(txtRegister.getText());
-        ClientDao.updateWithoutNationalID(client);
+        ClientDao.updateWithNationalID(client);
         setVisible(false);
         new SearchNationalID(userMail).setVisible(true);
     }//GEN-LAST:event_btnUpdateActionPerformed

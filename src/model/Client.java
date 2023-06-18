@@ -1,7 +1,14 @@
 package model;
 
 
+
 public class Client {
+    public static String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
+    public static String mobileNumberPattern = "^01[0125][0-9]{8}$"; //maximum 11 digit, must start with 01[0125]
+    public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
+    public static String nationalidPattern = "^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$";
+    public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
+    
     private String clientId;
     private String name;
     private int cash;
@@ -120,6 +127,29 @@ public class Client {
     public void setRegisterdate(String registerdate) {
         this.registerdate = registerdate;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" + "clientId=" + clientId + ", name=" + name + ", cash=" + cash + ", address=" + address + ", gender=" + gender + ", phoneno=" + phoneno + ", dateofbirth=" + dateofbirth + ", nationalId=" + nationalId + ", email=" + email + ", nationality=" + nationality + ", city=" + city + ", occupation=" + occupation + ", registerdate=" + registerdate + '}';
+    }
     
+    public static boolean testSaveClient(Client client)
+    {
+        if(client.name.matches(namePattern) && client.address.matches(addressPattern) && client.phoneno.matches(mobileNumberPattern) && client.email.matches(emailPattern) && client.nationalId.matches(nationalidPattern))
+        {
+            return true;
+        }
+        else
+            return false;
+    }
     
+    public static boolean testUpdateClient(Client client)
+    {
+        if(client.name.matches(namePattern) && client.address.matches(addressPattern) && client.phoneno.matches(mobileNumberPattern) && client.email.matches(emailPattern) && client.nationalId.matches(nationalidPattern))
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 }

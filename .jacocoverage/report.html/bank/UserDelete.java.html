@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UserDelete.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bank-Management-System&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">bank</a> &gt; <span class="el_source">UserDelete.java</span></div><h1>UserDelete.java</h1><pre class="source lang-java linenums">package bank;
+
+import javax.swing.JOptionPane;
+import model.User;
+import dao.UserDao;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import pagination.style.PaginationItemRenderStyle1;
+import swing.EventCallBack;
+import swing.EventTextField;
+
+public class UserDelete extends javax.swing.JFrame {
+
+    public String userMail;
+
+<span class="nc" id="L19">    public UserDelete() {</span>
+<span class="nc" id="L20">        initComponents();</span>
+<span class="nc" id="L21">    }</span>
+
+<span class="nc" id="L23">    public UserDelete(String useremail) {</span>
+<span class="nc" id="L24">        initComponents();</span>
+<span class="nc" id="L25">        userMail = useremail;</span>
+<span class="nc" id="L26">        pagination1.setPaginationItemRender(new PaginationItemRenderStyle1());</span>
+<span class="nc" id="L27">        pagination1.addEventPagination((int page) -&gt; {</span>
+<span class="nc" id="L28">            getAllRecords(&quot;&quot;, page);</span>
+<span class="nc" id="L29">        });</span>
+<span class="nc" id="L30">        txtSearch.addEvent(new EventTextField() {</span>
+            @Override
+            public void onPressed(EventCallBack call) {
+<span class="nc" id="L33">                String email = txtSearch.getText();</span>
+<span class="nc" id="L34">                getAllRecords(email, 1);</span>
+<span class="nc" id="L35">            }</span>
+
+            @Override
+            public void onCancel() {
+<span class="nc" id="L39">                txtSearch.setText(&quot;&quot;);</span>
+<span class="nc" id="L40">                getAllRecords(&quot;&quot;, 1);</span>
+<span class="nc" id="L41">            }</span>
+        });
+<span class="nc" id="L43">    }</span>
+
+    public void getAllRecords(String email, int page) {
+        try {
+<span class="nc" id="L47">            int limit = 10;</span>
+<span class="nc" id="L48">            String sqlCount = &quot;select count(*) from user&quot;;</span>
+<span class="nc" id="L49">            int count = 0;</span>
+<span class="nc" id="L50">            ResultSet r = DbOperations.getData(sqlCount);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            if(r.first()){</span>
+<span class="nc" id="L52">                count = r.getInt(1);</span>
+            }
+<span class="nc" id="L54">            int totalPage = (int) Math.ceil(count/limit);</span>
+<span class="nc" id="L55">            pagination1.setPagegination(page, totalPage);</span>
+<span class="nc" id="L56">            ArrayList&lt;User&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L57">            ResultSet rs = DbOperations.getData(&quot;select *from user where email like '%&quot;+email+&quot;%' limit &quot;+(page-1)*limit+&quot; ,&quot;+limit);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            while(rs.next()){</span>
+<span class="nc" id="L59">                User user = new User();</span>
+<span class="nc" id="L60">                user.setId(rs.getInt(&quot;id&quot;));</span>
+<span class="nc" id="L61">                user.setName(rs.getString(&quot;name&quot;));</span>
+<span class="nc" id="L62">                user.setEmail(rs.getString(&quot;email&quot;));</span>
+<span class="nc" id="L63">                user.setMobileNumber(rs.getString(&quot;mobileNumber&quot;));</span>
+<span class="nc" id="L64">                user.setAddress(rs.getString(&quot;address&quot;));</span>
+<span class="nc" id="L65">                user.setPassword(rs.getString(&quot;password&quot;));</span>
+<span class="nc" id="L66">                user.setSecurityQuestion(rs.getString(&quot;securityQuestion&quot;));</span>
+<span class="nc" id="L67">                user.setAnswer(rs.getString(&quot;answer&quot;));</span>
+<span class="nc" id="L68">                user.setStatus(rs.getString(&quot;status&quot;));</span>
+<span class="nc" id="L69">                list.add(user);</span>
+<span class="nc" id="L70">            }</span>
+<span class="nc" id="L71">            DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();</span>
+<span class="nc" id="L72">            dtm.setRowCount(0);</span>
+<span class="nc" id="L73">            Iterator&lt;User&gt; itr = list.iterator();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            while (itr.hasNext()) {</span>
+<span class="nc" id="L75">                User userObj = itr.next();</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                if (!userObj.getEmail().equals(&quot;admin@gmail.com&quot;)) {</span>
+<span class="nc" id="L77">                    dtm.addRow(new Object[]{userObj.getName(), userObj.getEmail(), userObj.getMobileNumber(), userObj.getAddress(), userObj.getPassword(), userObj.getSecurityQuestion(), userObj.getAnswer(), userObj.getStatus()});</span>
+                }
+<span class="nc" id="L79">            }</span>
+<span class="nc" id="L80">        } catch (SQLException e) {</span>
+<span class="nc" id="L81">            JOptionPane.showMessageDialog(null, e);</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    // &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+<span class="nc" id="L89">        jLabel1 = new javax.swing.JLabel();</span>
+<span class="nc" id="L90">        jLabel2 = new javax.swing.JLabel();</span>
+<span class="nc" id="L91">        jSeparator1 = new javax.swing.JSeparator();</span>
+<span class="nc" id="L92">        jScrollPane1 = new javax.swing.JScrollPane();</span>
+<span class="nc" id="L93">        jTable1 = new javax.swing.JTable();</span>
+<span class="nc" id="L94">        jSeparator2 = new javax.swing.JSeparator();</span>
+<span class="nc" id="L95">        jLabel4 = new javax.swing.JLabel();</span>
+<span class="nc" id="L96">        jButton1 = new javax.swing.JButton();</span>
+<span class="nc" id="L97">        pagination1 = new pagination.Pagination();</span>
+<span class="nc" id="L98">        txtSearch = new swing.TextFieldAnimation();</span>
+<span class="nc" id="L99">        jLabel5 = new javax.swing.JLabel();</span>
+
+<span class="nc" id="L101">        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L102">        setUndecorated(true);</span>
+<span class="nc" id="L103">        addComponentListener(new java.awt.event.ComponentAdapter() {</span>
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+<span class="nc" id="L105">                formComponentShown(evt);</span>
+<span class="nc" id="L106">            }</span>
+        });
+<span class="nc" id="L108">        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());</span>
+
+<span class="nc" id="L110">        jLabel1.setFont(new java.awt.Font(&quot;Algerian&quot;, 1, 36)); // NOI18N</span>
+<span class="nc" id="L111">        jLabel1.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L112">        jLabel1.setText(&quot;delete user&quot;);</span>
+<span class="nc" id="L113">        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 26, -1, -1));</span>
+
+<span class="nc" id="L115">        jLabel2.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L116">        jLabel2.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L117">        jLabel2.setText(&quot;Email&quot;);</span>
+<span class="nc" id="L118">        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 95, -1, -1));</span>
+<span class="nc" id="L119">        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 136, 1354, 13));</span>
+
+<span class="nc" id="L121">        jTable1.setModel(new javax.swing.table.DefaultTableModel(</span>
+            new Object [][] {
+
+            },
+            new String [] {
+                &quot;Name&quot;, &quot;Email&quot;, &quot;Mobile Number&quot;, &quot;Address&quot;, &quot;Password&quot;, &quot;Security Question&quot;, &quot;Answer&quot;, &quot;Status&quot;
+            }
+        ));
+<span class="nc" id="L129">        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+<span class="nc" id="L131">                jTable1MouseClicked(evt);</span>
+<span class="nc" id="L132">            }</span>
+        });
+<span class="nc" id="L134">        jScrollPane1.setViewportView(jTable1);</span>
+
+<span class="nc" id="L136">        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 162, 1342, 481));</span>
+<span class="nc" id="L137">        getContentPane().add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 661, 1366, 10));</span>
+
+<span class="nc" id="L139">        jLabel4.setFont(new java.awt.Font(&quot;Algerian&quot;, 1, 36)); // NOI18N</span>
+<span class="nc" id="L140">        jLabel4.setForeground(new java.awt.Color(255, 255, 255));</span>
+<span class="nc" id="L141">        jLabel4.setText(&quot; *Click on row to delete user&quot;);</span>
+<span class="nc" id="L142">        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 680, -1, -1));</span>
+
+<span class="nc" id="L144">        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/Close_1.png&quot;))); // NOI18N</span>
+<span class="nc" id="L145">        jButton1.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L147">                jButton1ActionPerformed(evt);</span>
+<span class="nc" id="L148">            }</span>
+        });
+<span class="nc" id="L150">        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1298, 15, 56, -1));</span>
+
+<span class="nc" id="L152">        pagination1.setBackground(new java.awt.Color(0, 0, 255));</span>
+<span class="nc" id="L153">        pagination1.setForeground(new java.awt.Color(0, 0, 255));</span>
+<span class="nc" id="L154">        getContentPane().add(pagination1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 730, -1, -1));</span>
+
+<span class="nc" id="L156">        txtSearch.setAnimationColor(new java.awt.Color(0, 0, 255));</span>
+<span class="nc" id="L157">        getContentPane().add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(503, 86, 469, -1));</span>
+
+<span class="nc" id="L159">        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/tinywow_SL-0212121-40670-68_7888141_1.jpg&quot;))); // NOI18N</span>
+<span class="nc" id="L160">        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));</span>
+
+<span class="nc" id="L162">        pack();</span>
+<span class="nc" id="L163">        setLocationRelativeTo(null);</span>
+<span class="nc" id="L164">    }// &lt;/editor-fold&gt;//GEN-END:initComponents</span>
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+<span class="nc" id="L167">        getAllRecords(&quot;&quot;,1);</span>
+<span class="nc" id="L168">    }//GEN-LAST:event_formComponentShown</span>
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+<span class="nc" id="L171">        int index = jTable1.getSelectedRow();</span>
+<span class="nc" id="L172">        TableModel model = jTable1.getModel();</span>
+<span class="nc" id="L173">        String email = model.getValueAt(index, 1).toString();</span>
+<span class="nc" id="L174">        int a = JOptionPane.showConfirmDialog(null, &quot;Are you sure to delete this user&quot;, &quot;Select&quot;, JOptionPane.YES_NO_OPTION);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (a == 0) {</span>
+<span class="nc" id="L176">            UserDao.delete(email);</span>
+<span class="nc" id="L177">            setVisible(false);</span>
+<span class="nc" id="L178">            new UserDelete(userMail).setVisible(true);</span>
+        }
+<span class="nc" id="L180">    }//GEN-LAST:event_jTable1MouseClicked</span>
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+<span class="nc" id="L183">        setVisible(false);</span>
+<span class="nc" id="L184">        new Home(userMail).setVisible(true);</span>
+<span class="nc" id="L185">    }//GEN-LAST:event_jButton1ActionPerformed</span>
+
+    public static void main(String args[]) {
+
+<span class="nc" id="L189">        java.awt.EventQueue.invokeLater(new Runnable() {</span>
+            public void run() {
+<span class="nc" id="L191">                new UserDelete().setVisible(true);</span>
+<span class="nc" id="L192">            }</span>
+        });
+<span class="nc" id="L194">    }</span>
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTable jTable1;
+    private pagination.Pagination pagination1;
+    private swing.TextFieldAnimation txtSearch;
+    // End of variables declaration//GEN-END:variables
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

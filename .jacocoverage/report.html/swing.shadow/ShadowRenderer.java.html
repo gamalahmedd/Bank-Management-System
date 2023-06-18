@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ShadowRenderer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bank-Management-System&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">swing.shadow</a> &gt; <span class="el_source">ShadowRenderer.java</span></div><h1>ShadowRenderer.java</h1><pre class="source lang-java linenums">package swing.shadow;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+
+public class ShadowRenderer {
+
+<span class="nc" id="L8">    private int size = 5;</span>
+<span class="nc" id="L9">    private float opacity = 0.5f;</span>
+<span class="nc" id="L10">    private Color color = Color.BLACK;</span>
+
+    public ShadowRenderer() {
+<span class="nc" id="L13">        this(5, 0.5f, Color.BLACK);</span>
+<span class="nc" id="L14">    }</span>
+
+<span class="nc" id="L16">    public ShadowRenderer(final int size, final float opacity, final Color color) {</span>
+<span class="nc" id="L17">        this.size = size;</span>
+<span class="nc" id="L18">        this.opacity = opacity;</span>
+<span class="nc" id="L19">        this.color = color;</span>
+<span class="nc" id="L20">    }</span>
+
+    public Color getColor() {
+<span class="nc" id="L23">        return color;</span>
+    }
+
+    public float getOpacity() {
+<span class="nc" id="L27">        return opacity;</span>
+    }
+
+    public int getSize() {
+<span class="nc" id="L31">        return size;</span>
+    }
+
+    public BufferedImage createShadow(final BufferedImage image) {
+<span class="nc" id="L35">        int shadowSize = size * 2;</span>
+<span class="nc" id="L36">        int srcWidth = image.getWidth();</span>
+<span class="nc" id="L37">        int srcHeight = image.getHeight();</span>
+<span class="nc" id="L38">        int dstWidth = srcWidth + shadowSize;</span>
+<span class="nc" id="L39">        int dstHeight = srcHeight + shadowSize;</span>
+<span class="nc" id="L40">        int left = size;</span>
+<span class="nc" id="L41">        int right = shadowSize - left;</span>
+<span class="nc" id="L42">        int yStop = dstHeight - right;</span>
+<span class="nc" id="L43">        int shadowRgb = color.getRGB() &amp; 0x00FFFFFF;</span>
+<span class="nc" id="L44">        int[] aHistory = new int[shadowSize];</span>
+        int historyIdx;
+        int aSum;
+<span class="nc" id="L47">        BufferedImage dst = new BufferedImage(dstWidth, dstHeight,</span>
+                BufferedImage.TYPE_INT_ARGB);
+<span class="nc" id="L49">        int[] dstBuffer = new int[dstWidth * dstHeight];</span>
+<span class="nc" id="L50">        int[] srcBuffer = new int[srcWidth * srcHeight];</span>
+<span class="nc" id="L51">        GraphicsUtilities.getPixels(image, 0, 0, srcWidth, srcHeight, srcBuffer);</span>
+<span class="nc" id="L52">        int lastPixelOffset = right * dstWidth;</span>
+<span class="nc" id="L53">        float hSumDivider = 1.0f / shadowSize;</span>
+<span class="nc" id="L54">        float vSumDivider = opacity / shadowSize;</span>
+<span class="nc" id="L55">        int[] hSumLookup = new int[256 * shadowSize];</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (int i = 0; i &lt; hSumLookup.length; i++) {</span>
+<span class="nc" id="L57">            hSumLookup[i] = (int) (i * hSumDivider);</span>
+        }
+<span class="nc" id="L59">        int[] vSumLookup = new int[256 * shadowSize];</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        for (int i = 0; i &lt; vSumLookup.length; i++) {</span>
+<span class="nc" id="L61">            vSumLookup[i] = (int) (i * vSumDivider);</span>
+        }
+        int srcOffset;
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (int srcY = 0, dstOffset = left * dstWidth; srcY &lt; srcHeight; srcY++) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            for (historyIdx = 0; historyIdx &lt; shadowSize;) {</span>
+<span class="nc" id="L66">                aHistory[historyIdx++] = 0;</span>
+            }
+<span class="nc" id="L68">            aSum = 0;</span>
+<span class="nc" id="L69">            historyIdx = 0;</span>
+<span class="nc" id="L70">            srcOffset = srcY * srcWidth;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            for (int srcX = 0; srcX &lt; srcWidth; srcX++) {</span>
+<span class="nc" id="L72">                int a = hSumLookup[aSum];</span>
+<span class="nc" id="L73">                dstBuffer[dstOffset++] = a &lt;&lt; 24;</span>
+<span class="nc" id="L74">                aSum -= aHistory[historyIdx];</span>
+<span class="nc" id="L75">                a = srcBuffer[srcOffset + srcX] &gt;&gt;&gt; 24;</span>
+<span class="nc" id="L76">                aHistory[historyIdx] = a;</span>
+<span class="nc" id="L77">                aSum += a;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (++historyIdx &gt;= shadowSize) {</span>
+<span class="nc" id="L79">                    historyIdx -= shadowSize;</span>
+                }
+            }
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            for (int i = 0; i &lt; shadowSize; i++) {</span>
+<span class="nc" id="L83">                int a = hSumLookup[aSum];</span>
+<span class="nc" id="L84">                dstBuffer[dstOffset++] = a &lt;&lt; 24;</span>
+<span class="nc" id="L85">                aSum -= aHistory[historyIdx];</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                if (++historyIdx &gt;= shadowSize) {</span>
+<span class="nc" id="L87">                    historyIdx -= shadowSize;</span>
+                }
+            }
+        }
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        for (int x = 0, bufferOffset = 0; x &lt; dstWidth; x++, bufferOffset = x) {</span>
+<span class="nc" id="L93">            aSum = 0;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            for (historyIdx = 0; historyIdx &lt; left;) {</span>
+<span class="nc" id="L95">                aHistory[historyIdx++] = 0;</span>
+            }
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            for (int y = 0; y &lt; right; y++, bufferOffset += dstWidth) {</span>
+<span class="nc" id="L98">                int a = dstBuffer[bufferOffset] &gt;&gt;&gt; 24;</span>
+<span class="nc" id="L99">                aHistory[historyIdx++] = a;</span>
+<span class="nc" id="L100">                aSum += a;</span>
+            }
+<span class="nc" id="L102">            bufferOffset = x;</span>
+<span class="nc" id="L103">            historyIdx = 0;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            for (int y = 0; y &lt; yStop; y++, bufferOffset += dstWidth) {</span>
+<span class="nc" id="L105">                int a = vSumLookup[aSum];</span>
+<span class="nc" id="L106">                dstBuffer[bufferOffset] = a &lt;&lt; 24 | shadowRgb;</span>
+<span class="nc" id="L107">                aSum -= aHistory[historyIdx];</span>
+<span class="nc" id="L108">                a = dstBuffer[bufferOffset + lastPixelOffset] &gt;&gt;&gt; 24;</span>
+<span class="nc" id="L109">                aHistory[historyIdx] = a;</span>
+<span class="nc" id="L110">                aSum += a;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                if (++historyIdx &gt;= shadowSize) {</span>
+<span class="nc" id="L112">                    historyIdx -= shadowSize;</span>
+                }
+            }
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            for (int y = yStop; y &lt; dstHeight; y++, bufferOffset += dstWidth) {</span>
+<span class="nc" id="L116">                int a = vSumLookup[aSum];</span>
+<span class="nc" id="L117">                dstBuffer[bufferOffset] = a &lt;&lt; 24 | shadowRgb;</span>
+<span class="nc" id="L118">                aSum -= aHistory[historyIdx];</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                if (++historyIdx &gt;= shadowSize) {</span>
+<span class="nc" id="L120">                    historyIdx -= shadowSize;</span>
+                }
+            }
+        }
+<span class="nc" id="L124">        GraphicsUtilities.setPixels(dst, 0, 0, dstWidth, dstHeight, dstBuffer);</span>
+<span class="nc" id="L125">        return dst;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

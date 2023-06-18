@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>updateDetailsClient.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bank-Management-System&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">bank</a> &gt; <span class="el_source">updateDetailsClient.java</span></div><h1>updateDetailsClient.java</h1><pre class="source lang-java linenums">package bank;
+import java.sql.*;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import dao.ClientDao;
+import model.Client;
+
+public class updateDetailsClient extends javax.swing.JFrame {
+
+<span class="nc" id="L12">    public String emailPattern = &quot;^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$&quot;;</span>
+<span class="nc" id="L13">    public String mobileNumberPattern = &quot;^01[0125][0-9]{8}$&quot;;</span>
+<span class="nc" id="L14">    public String NI = &quot;^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$&quot;;</span>
+<span class="nc" id="L15">    public String DOB = &quot;^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$&quot;;</span>
+<span class="nc" id="L16">    private String ID = null;</span>
+    public String userMail;
+    
+<span class="nc" id="L19">    public updateDetailsClient() {</span>
+<span class="nc" id="L20">        initComponents();</span>
+<span class="nc" id="L21">    }</span>
+<span class="nc" id="L22">    public updateDetailsClient(String useremail){</span>
+<span class="nc" id="L23">        initComponents();</span>
+<span class="nc" id="L24">        btnUpdate.setEnabled(false);</span>
+<span class="nc" id="L25">        btnSearch.setEnabled(false);</span>
+<span class="nc" id="L26">        txtName.setEditable(false);</span>
+<span class="nc" id="L27">        SpinCash.setEnabled(false);</span>
+<span class="nc" id="L28">        txtAddress.setEditable(false);</span>
+<span class="nc" id="L29">        txtGender.setEditable(false);</span>
+<span class="nc" id="L30">        txtPhoneNumber.setEditable(false);</span>
+<span class="nc" id="L31">        txtDOB.setEditable(false);</span>
+<span class="nc" id="L32">        txtNationalID.setEditable(false);</span>
+<span class="nc" id="L33">        txtEmail.setEditable(false);</span>
+<span class="nc" id="L34">        txtNationality.setEditable(false);</span>
+<span class="nc" id="L35">        txtCity.setEditable(false);</span>
+<span class="nc" id="L36">        txtOccupation.setEditable(false);</span>
+<span class="nc" id="L37">        txtRegister.setEditable(false);</span>
+<span class="nc" id="L38">        btnUpdate.setEnabled(false);</span>
+<span class="nc" id="L39">        btnSearch.setEnabled(false);</span>
+<span class="nc" id="L40">        txtName.setEditable(false);</span>
+<span class="nc" id="L41">        SpinCash.setEnabled(false);</span>
+<span class="nc" id="L42">        txtAddress.setEditable(false);</span>
+<span class="nc" id="L43">        txtGender.setEditable(false);</span>
+<span class="nc" id="L44">        txtPhoneNumber.setEditable(false);</span>
+<span class="nc" id="L45">        txtDOB.setEditable(false);</span>
+<span class="nc" id="L46">        txtNationalID.setEditable(false);</span>
+<span class="nc" id="L47">        txtEmail.setEditable(false);</span>
+<span class="nc" id="L48">        txtNationality.setEditable(false);</span>
+<span class="nc" id="L49">        txtCity.setEditable(false);</span>
+<span class="nc" id="L50">        txtOccupation.setEditable(false);</span>
+<span class="nc" id="L51">        txtRegister.setEditable(false);</span>
+<span class="nc" id="L52">        userMail = useremail;</span>
+<span class="nc" id="L53">    }</span>
+
+    public void EnableFields(){
+<span class="nc" id="L56">        btnSearch.setEnabled(false);</span>
+<span class="nc" id="L57">        txtName.setEditable(true);</span>
+<span class="nc" id="L58">        txtAddress.setEditable(true);</span>
+<span class="nc" id="L59">        txtGender.setEditable(true);</span>
+<span class="nc" id="L60">        txtPhoneNumber.setEditable(true);</span>
+<span class="nc" id="L61">        txtDOB.setEditable(true);</span>
+<span class="nc" id="L62">        txtNationalID.setEditable(true);</span>
+<span class="nc" id="L63">        txtEmail.setEditable(true);</span>
+<span class="nc" id="L64">        txtNationality.setEditable(true);</span>
+<span class="nc" id="L65">        txtCity.setEditable(true);</span>
+<span class="nc" id="L66">        txtOccupation.setEditable(true);</span>
+<span class="nc" id="L67">        txtRegister.setEditable(true);</span>
+<span class="nc" id="L68">    }</span>
+    public void validateID(){
+<span class="nc" id="L70">        ID = txtClientID.getText();</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if(!ID.equals(&quot;&quot;)){</span>
+<span class="nc" id="L72">            btnSearch.setEnabled(true);</span>
+        }
+        else
+<span class="nc" id="L75">            btnSearch.setEnabled(false);</span>
+<span class="nc" id="L76">    }</span>
+    public void validateFields(){
+<span class="nc" id="L78">        String name = txtName.getText();</span>
+<span class="nc" id="L79">        String address = txtAddress.getText();</span>
+<span class="nc" id="L80">        String gender = txtGender.getText();</span>
+<span class="nc" id="L81">        String phoneno = txtPhoneNumber.getText();</span>
+<span class="nc" id="L82">        String dateofbirth = txtDOB.getText();</span>
+<span class="nc" id="L83">        String nationalId = txtNationalID.getText();</span>
+<span class="nc" id="L84">        String email = txtEmail.getText();</span>
+<span class="nc" id="L85">        String nationality = txtNationality.getText();</span>
+<span class="nc" id="L86">        String city = txtCity.getText();</span>
+<span class="nc" id="L87">        String occupation = txtOccupation.getText();</span>
+<span class="nc" id="L88">        String registerdate = txtRegister.getText();</span>
+<span class="nc bnc" id="L89" title="All 22 branches missed.">        if(!name.equals(&quot;&quot;) &amp;&amp; !address.equals(&quot;&quot;) &amp;&amp; !gender.equals(&quot;&quot;) &amp;&amp; phoneno.matches(mobileNumberPattern) &amp;&amp; dateofbirth.matches(DOB) &amp;&amp; nationalId.matches(NI) &amp;&amp; email.matches(emailPattern) &amp;&amp; !nationality.equals(&quot;&quot;) &amp;&amp; !city.equals(&quot;&quot;) &amp;&amp; !occupation.equals(&quot;&quot;) &amp;&amp; registerdate.matches(DOB)){</span>
+<span class="nc" id="L90">            btnUpdate.setEnabled(true);</span>
+        }
+        else
+<span class="nc" id="L93">            btnUpdate.setEnabled(false);</span>
+<span class="nc" id="L94">    }</span>
+    
+    @SuppressWarnings(&quot;unchecked&quot;)
+    // &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+<span class="nc" id="L100">        jScrollPane1 = new javax.swing.JScrollPane();</span>
+<span class="nc" id="L101">        jList1 = new javax.swing.JList&lt;&gt;();</span>
+<span class="nc" id="L102">        jLabel1 = new javax.swing.JLabel();</span>
+<span class="nc" id="L103">        jSeparator1 = new javax.swing.JSeparator();</span>
+<span class="nc" id="L104">        jLabel2 = new javax.swing.JLabel();</span>
+<span class="nc" id="L105">        txtClientID = new javax.swing.JTextField();</span>
+<span class="nc" id="L106">        btnSearch = new javax.swing.JButton();</span>
+<span class="nc" id="L107">        jSeparator2 = new javax.swing.JSeparator();</span>
+<span class="nc" id="L108">        jLabel3 = new javax.swing.JLabel();</span>
+<span class="nc" id="L109">        jLabel4 = new javax.swing.JLabel();</span>
+<span class="nc" id="L110">        jLabel5 = new javax.swing.JLabel();</span>
+<span class="nc" id="L111">        jLabel6 = new javax.swing.JLabel();</span>
+<span class="nc" id="L112">        jLabel7 = new javax.swing.JLabel();</span>
+<span class="nc" id="L113">        jLabel8 = new javax.swing.JLabel();</span>
+<span class="nc" id="L114">        txtName = new javax.swing.JTextField();</span>
+<span class="nc" id="L115">        SpinCash = new javax.swing.JSpinner();</span>
+<span class="nc" id="L116">        txtAddress = new javax.swing.JTextField();</span>
+<span class="nc" id="L117">        txtGender = new javax.swing.JTextField();</span>
+<span class="nc" id="L118">        txtPhoneNumber = new javax.swing.JTextField();</span>
+<span class="nc" id="L119">        txtDOB = new javax.swing.JTextField();</span>
+<span class="nc" id="L120">        jLabel9 = new javax.swing.JLabel();</span>
+<span class="nc" id="L121">        jLabel10 = new javax.swing.JLabel();</span>
+<span class="nc" id="L122">        jLabel11 = new javax.swing.JLabel();</span>
+<span class="nc" id="L123">        jLabel12 = new javax.swing.JLabel();</span>
+<span class="nc" id="L124">        jLabel13 = new javax.swing.JLabel();</span>
+<span class="nc" id="L125">        txtNationalID = new javax.swing.JTextField();</span>
+<span class="nc" id="L126">        txtEmail = new javax.swing.JTextField();</span>
+<span class="nc" id="L127">        txtNationality = new javax.swing.JTextField();</span>
+<span class="nc" id="L128">        txtCity = new javax.swing.JTextField();</span>
+<span class="nc" id="L129">        txtOccupation = new javax.swing.JTextField();</span>
+<span class="nc" id="L130">        jSeparator3 = new javax.swing.JSeparator();</span>
+<span class="nc" id="L131">        btnUpdate = new javax.swing.JButton();</span>
+<span class="nc" id="L132">        jButton3 = new javax.swing.JButton();</span>
+<span class="nc" id="L133">        jButton4 = new javax.swing.JButton();</span>
+<span class="nc" id="L134">        jLabel15 = new javax.swing.JLabel();</span>
+<span class="nc" id="L135">        txtRegister = new javax.swing.JTextField();</span>
+<span class="nc" id="L136">        jLabel14 = new javax.swing.JLabel();</span>
+
+<span class="nc" id="L138">        jList1.setModel(new javax.swing.AbstractListModel&lt;String&gt;() {</span>
+<span class="nc" id="L139">            String[] strings = { &quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;, &quot;Item 4&quot;, &quot;Item 5&quot; };</span>
+<span class="nc" id="L140">            public int getSize() { return strings.length; }</span>
+<span class="nc" id="L141">            public String getElementAt(int i) { return strings[i]; }</span>
+        });
+<span class="nc" id="L143">        jScrollPane1.setViewportView(jList1);</span>
+
+<span class="nc" id="L145">        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L146">        setLocation(new java.awt.Point(600, 200));</span>
+<span class="nc" id="L147">        setUndecorated(true);</span>
+<span class="nc" id="L148">        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());</span>
+
+<span class="nc" id="L150">        jLabel1.setFont(new java.awt.Font(&quot;Algerian&quot;, 1, 36)); // NOI18N</span>
+<span class="nc" id="L151">        jLabel1.setText(&quot;Update Client Details&quot;);</span>
+<span class="nc" id="L152">        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));</span>
+<span class="nc" id="L153">        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 75, 700, 10));</span>
+
+<span class="nc" id="L155">        jLabel2.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L156">        jLabel2.setText(&quot;Client ID:&quot;);</span>
+<span class="nc" id="L157">        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 100, 80, -1));</span>
+
+<span class="nc" id="L159">        txtClientID.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L160">        txtClientID.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L162">                txtClientIDKeyReleased(evt);</span>
+<span class="nc" id="L163">            }</span>
+        });
+<span class="nc" id="L165">        getContentPane().add(txtClientID, new org.netbeans.lib.awtextra.AbsoluteConstraints(281, 97, 178, -1));</span>
+
+<span class="nc" id="L167">        btnSearch.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L168">        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/search1.png&quot;))); // NOI18N</span>
+<span class="nc" id="L169">        btnSearch.setText(&quot;Search&quot;);</span>
+<span class="nc" id="L170">        btnSearch.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L172">                btnSearchActionPerformed(evt);</span>
+<span class="nc" id="L173">            }</span>
+        });
+<span class="nc" id="L175">        getContentPane().add(btnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(494, 97, -1, -1));</span>
+<span class="nc" id="L176">        getContentPane().add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 136, 700, 9));</span>
+
+<span class="nc" id="L178">        jLabel3.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L179">        jLabel3.setText(&quot;Full Name:&quot;);</span>
+<span class="nc" id="L180">        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 166, -1, -1));</span>
+
+<span class="nc" id="L182">        jLabel4.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L183">        jLabel4.setText(&quot;Cash&quot;);</span>
+<span class="nc" id="L184">        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 214, 37, -1));</span>
+
+<span class="nc" id="L186">        jLabel5.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L187">        jLabel5.setText(&quot;Address:&quot;);</span>
+<span class="nc" id="L188">        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 262, -1, -1));</span>
+
+<span class="nc" id="L190">        jLabel6.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L191">        jLabel6.setText(&quot;Gender:&quot;);</span>
+<span class="nc" id="L192">        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 314, 58, -1));</span>
+
+<span class="nc" id="L194">        jLabel7.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L195">        jLabel7.setText(&quot;Phone Number:&quot;);</span>
+<span class="nc" id="L196">        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 368, -1, -1));</span>
+
+<span class="nc" id="L198">        jLabel8.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L199">        jLabel8.setText(&quot;Date of Birth:&quot;);</span>
+<span class="nc" id="L200">        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 417, -1, -1));</span>
+
+<span class="nc" id="L202">        txtName.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L203">        txtName.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L205">                txtNameKeyReleased(evt);</span>
+<span class="nc" id="L206">            }</span>
+        });
+<span class="nc" id="L208">        getContentPane().add(txtName, new org.netbeans.lib.awtextra.AbsoluteConstraints(128, 163, 216, -1));</span>
+
+<span class="nc" id="L210">        SpinCash.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L211">        getContentPane().add(SpinCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(128, 211, 216, -1));</span>
+
+<span class="nc" id="L213">        txtAddress.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L214">        txtAddress.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L216">                txtAddressKeyReleased(evt);</span>
+<span class="nc" id="L217">            }</span>
+        });
+<span class="nc" id="L219">        getContentPane().add(txtAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(128, 259, 216, -1));</span>
+
+<span class="nc" id="L221">        txtGender.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L222">        txtGender.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L224">                txtGenderKeyReleased(evt);</span>
+<span class="nc" id="L225">            }</span>
+        });
+<span class="nc" id="L227">        getContentPane().add(txtGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(128, 311, 216, -1));</span>
+
+<span class="nc" id="L229">        txtPhoneNumber.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L230">        txtPhoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L232">                txtPhoneNumberKeyReleased(evt);</span>
+<span class="nc" id="L233">            }</span>
+        });
+<span class="nc" id="L235">        getContentPane().add(txtPhoneNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 365, 214, -1));</span>
+
+<span class="nc" id="L237">        txtDOB.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L238">        txtDOB.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L240">                txtDOBKeyReleased(evt);</span>
+<span class="nc" id="L241">            }</span>
+        });
+<span class="nc" id="L243">        getContentPane().add(txtDOB, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 414, 214, -1));</span>
+
+<span class="nc" id="L245">        jLabel9.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L246">        jLabel9.setText(&quot;National ID:&quot;);</span>
+<span class="nc" id="L247">        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 160, -1, 30));</span>
+
+<span class="nc" id="L249">        jLabel10.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L250">        jLabel10.setText(&quot;Email&quot;);</span>
+<span class="nc" id="L251">        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 43, 30));</span>
+
+<span class="nc" id="L253">        jLabel11.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L254">        jLabel11.setText(&quot;Nationality:&quot;);</span>
+<span class="nc" id="L255">        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, -1, -1));</span>
+
+<span class="nc" id="L257">        jLabel12.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L258">        jLabel12.setText(&quot;City:&quot;);</span>
+<span class="nc" id="L259">        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 310, 43, -1));</span>
+
+<span class="nc" id="L261">        jLabel13.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L262">        jLabel13.setText(&quot;Occupation:&quot;);</span>
+<span class="nc" id="L263">        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 370, -1, 20));</span>
+
+<span class="nc" id="L265">        txtNationalID.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L266">        txtNationalID.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L268">                txtNationalIDKeyReleased(evt);</span>
+<span class="nc" id="L269">            }</span>
+        });
+<span class="nc" id="L271">        getContentPane().add(txtNationalID, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 230, 30));</span>
+
+<span class="nc" id="L273">        txtEmail.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L274">        txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L276">                txtEmailKeyReleased(evt);</span>
+<span class="nc" id="L277">            }</span>
+        });
+<span class="nc" id="L279">        getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 210, 230, -1));</span>
+
+<span class="nc" id="L281">        txtNationality.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L282">        txtNationality.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L284">                txtNationalityKeyReleased(evt);</span>
+<span class="nc" id="L285">            }</span>
+        });
+<span class="nc" id="L287">        getContentPane().add(txtNationality, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 258, 230, -1));</span>
+
+<span class="nc" id="L289">        txtCity.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L290">        txtCity.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L292">                txtCityKeyReleased(evt);</span>
+<span class="nc" id="L293">            }</span>
+        });
+<span class="nc" id="L295">        getContentPane().add(txtCity, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 310, 230, -1));</span>
+
+<span class="nc" id="L297">        txtOccupation.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L298">        txtOccupation.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+<span class="nc" id="L300">                txtOccupationKeyReleased(evt);</span>
+<span class="nc" id="L301">            }</span>
+        });
+<span class="nc" id="L303">        getContentPane().add(txtOccupation, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 366, 235, 30));</span>
+<span class="nc" id="L304">        getContentPane().add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 452, 700, 10));</span>
+
+<span class="nc" id="L306">        btnUpdate.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L307">        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/save_1.png&quot;))); // NOI18N</span>
+<span class="nc" id="L308">        btnUpdate.setText(&quot;Update&quot;);</span>
+<span class="nc" id="L309">        btnUpdate.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L311">                btnUpdateActionPerformed(evt);</span>
+<span class="nc" id="L312">            }</span>
+        });
+<span class="nc" id="L314">        getContentPane().add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 460, -1, -1));</span>
+
+<span class="nc" id="L316">        jButton3.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L317">        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/Update details.png&quot;))); // NOI18N</span>
+<span class="nc" id="L318">        jButton3.setText(&quot;Reset&quot;);</span>
+<span class="nc" id="L319">        jButton3.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L321">                jButton3ActionPerformed(evt);</span>
+<span class="nc" id="L322">            }</span>
+        });
+<span class="nc" id="L324">        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 460, -1, -1));</span>
+
+<span class="nc" id="L326">        jButton4.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L327">        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/Exit application.png&quot;))); // NOI18N</span>
+<span class="nc" id="L328">        jButton4.setText(&quot;Close&quot;);</span>
+<span class="nc" id="L329">        jButton4.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L331">                jButton4ActionPerformed(evt);</span>
+<span class="nc" id="L332">            }</span>
+        });
+<span class="nc" id="L334">        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 460, -1, -1));</span>
+
+<span class="nc" id="L336">        jLabel15.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L337">        jLabel15.setText(&quot;Register Date:&quot;);</span>
+<span class="nc" id="L338">        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 417, 95, -1));</span>
+
+<span class="nc" id="L340">        txtRegister.setFont(new java.awt.Font(&quot;Segoe UI&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L341">        getContentPane().add(txtRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 417, 218, -1));</span>
+
+<span class="nc" id="L343">        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource(&quot;/image/all page background image.png&quot;))); // NOI18N</span>
+<span class="nc" id="L344">        jLabel14.setText(&quot;jLabel14&quot;);</span>
+<span class="nc" id="L345">        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, -1));</span>
+
+<span class="nc" id="L347">        pack();</span>
+<span class="nc" id="L348">    }// &lt;/editor-fold&gt;//GEN-END:initComponents</span>
+
+    static Connection con;
+    static Statement st;
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+<span class="nc" id="L353">        setVisible(false);</span>
+<span class="nc" id="L354">        new Home(userMail).setVisible(true);</span>
+<span class="nc" id="L355">    }//GEN-LAST:event_jButton4ActionPerformed</span>
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+<span class="nc" id="L358">        setVisible(false);</span>
+<span class="nc" id="L359">        new updateDetailsClient(userMail).setVisible(true);</span>
+<span class="nc" id="L360">    }//GEN-LAST:event_jButton3ActionPerformed</span>
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+<span class="nc" id="L363">        Client client = new Client();</span>
+<span class="nc" id="L364">        client.setClientId(txtClientID.getText());</span>
+<span class="nc" id="L365">        client.setName(txtName.getText());</span>
+<span class="nc" id="L366">        client.setCash((int)SpinCash.getValue());</span>
+<span class="nc" id="L367">        client.setAddress(txtAddress.getText());</span>
+<span class="nc" id="L368">        client.setGender(txtGender.getText());</span>
+<span class="nc" id="L369">        client.setPhoneno(txtPhoneNumber.getText());</span>
+<span class="nc" id="L370">        client.setDateofbirth(txtDOB.getText());</span>
+<span class="nc" id="L371">        client.setNationalId(txtNationalID.getText());</span>
+<span class="nc" id="L372">        client.setEmail(txtEmail.getText());</span>
+<span class="nc" id="L373">        client.setNationality(txtNationality.getText());</span>
+<span class="nc" id="L374">        client.setCity(txtCity.getText());</span>
+<span class="nc" id="L375">        client.setOccupation(txtOccupation.getText());</span>
+<span class="nc" id="L376">        client.setRegisterdate(txtRegister.getText());</span>
+<span class="nc" id="L377">        ClientDao.update(client);</span>
+<span class="nc" id="L378">        setVisible(false);</span>
+<span class="nc" id="L379">        new updateDetailsClient(userMail).setVisible(true);</span>
+<span class="nc" id="L380">    }//GEN-LAST:event_btnUpdateActionPerformed</span>
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+<span class="nc" id="L383">        String clientId = txtClientID.getText();</span>
+        try{
+<span class="nc" id="L385">            ResultSet rs = ClientDao.searchUpdate(clientId);</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">            if(rs.next())</span>
+            {
+<span class="nc" id="L388">                txtName.setText(rs.getString(&quot;name&quot;));</span>
+<span class="nc" id="L389">                SpinCash.setValue(rs.getInt(&quot;cash&quot;));</span>
+<span class="nc" id="L390">                txtAddress.setText(rs.getString(&quot;address&quot;));</span>
+<span class="nc" id="L391">                txtGender.setText(rs.getString(&quot;gender&quot;));</span>
+<span class="nc" id="L392">                txtPhoneNumber.setText(rs.getString(&quot;phoneno&quot;));</span>
+<span class="nc" id="L393">                txtDOB.setText(rs.getString(&quot;dateofbirth&quot;));</span>
+<span class="nc" id="L394">                txtNationalID.setText(rs.getString(&quot;nationalId&quot;));</span>
+<span class="nc" id="L395">                txtEmail.setText(rs.getString(&quot;email&quot;));</span>
+<span class="nc" id="L396">                txtNationality.setText(rs.getString(&quot;nationality&quot;));</span>
+<span class="nc" id="L397">                txtCity.setText(rs.getString(&quot;city&quot;));</span>
+<span class="nc" id="L398">                txtOccupation.setText(rs.getString(&quot;occupation&quot;));</span>
+<span class="nc" id="L399">                txtRegister.setText(rs.getString(&quot;registerdate&quot;));</span>
+<span class="nc" id="L400">                txtClientID.setEditable(false);</span>
+<span class="nc" id="L401">                EnableFields();</span>
+            }
+            else
+<span class="nc" id="L404">                JOptionPane.showMessageDialog(null, &quot;Client ID does not exist&quot;);</span>
+        }
+<span class="nc" id="L406">        catch(SQLException e)</span>
+        {
+<span class="nc" id="L408">            JOptionPane.showMessageDialog(null, e);</span>
+<span class="nc" id="L409">        }</span>
+<span class="nc" id="L410">    }//GEN-LAST:event_btnSearchActionPerformed</span>
+
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+<span class="nc" id="L413">        validateFields();</span>
+<span class="nc" id="L414">    }//GEN-LAST:event_txtNameKeyReleased</span>
+
+    private void txtAddressKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAddressKeyReleased
+<span class="nc" id="L417">        validateFields();</span>
+<span class="nc" id="L418">    }//GEN-LAST:event_txtAddressKeyReleased</span>
+
+    private void txtGenderKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGenderKeyReleased
+<span class="nc" id="L421">        validateFields();</span>
+<span class="nc" id="L422">    }//GEN-LAST:event_txtGenderKeyReleased</span>
+
+    private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
+<span class="nc" id="L425">        validateFields();</span>
+<span class="nc" id="L426">    }//GEN-LAST:event_txtPhoneNumberKeyReleased</span>
+
+    private void txtNationalIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNationalIDKeyReleased
+<span class="nc" id="L429">        validateFields();</span>
+<span class="nc" id="L430">    }//GEN-LAST:event_txtNationalIDKeyReleased</span>
+
+    private void txtEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyReleased
+<span class="nc" id="L433">        validateFields();</span>
+<span class="nc" id="L434">    }//GEN-LAST:event_txtEmailKeyReleased</span>
+
+    private void txtNationalityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNationalityKeyReleased
+<span class="nc" id="L437">        validateFields();</span>
+<span class="nc" id="L438">    }//GEN-LAST:event_txtNationalityKeyReleased</span>
+
+    private void txtCityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCityKeyReleased
+<span class="nc" id="L441">        validateFields();</span>
+<span class="nc" id="L442">    }//GEN-LAST:event_txtCityKeyReleased</span>
+
+    private void txtClientIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClientIDKeyReleased
+<span class="nc" id="L445">        validateID();</span>
+<span class="nc" id="L446">    }//GEN-LAST:event_txtClientIDKeyReleased</span>
+
+    private void txtDOBKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDOBKeyReleased
+<span class="nc" id="L449">        validateFields();</span>
+<span class="nc" id="L450">    }//GEN-LAST:event_txtDOBKeyReleased</span>
+
+    private void txtOccupationKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOccupationKeyReleased
+<span class="nc" id="L453">        validateFields();</span>
+<span class="nc" id="L454">    }//GEN-LAST:event_txtOccupationKeyReleased</span>
+
+    
+    public static void main(String args[]) {
+        
+<span class="nc" id="L459">        java.awt.EventQueue.invokeLater(new Runnable() {</span>
+            public void run() {
+<span class="nc" id="L461">                new updateDetailsClient().setVisible(true);</span>
+<span class="nc" id="L462">            }</span>
+        });
+<span class="nc" id="L464">    }</span>
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner SpinCash;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JList&lt;String&gt; jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtCity;
+    private javax.swing.JTextField txtClientID;
+    private javax.swing.JTextField txtDOB;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtGender;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtNationalID;
+    private javax.swing.JTextField txtNationality;
+    private javax.swing.JTextField txtOccupation;
+    private javax.swing.JTextField txtPhoneNumber;
+    private javax.swing.JTextField txtRegister;
+    // End of variables declaration//GEN-END:variables
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

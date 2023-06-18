@@ -15,7 +15,6 @@ import model.User;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -52,13 +51,11 @@ public class UserDaoTest {
     @Test
     public void testSave() {
         User user = new User();
-        ArrayList<User> userList = new ArrayList<>();
-        User userTest = new User("Gamal Ahmed", "gemyy555@gmail.com", "1159553525", "25 Elharameen, Cairo, EG 62511", "Abcdef12@", "What's your father name?", "Ahmed", "false");
         String data = "";
         int i = 0;
         StringTokenizer str = null;
         try {
-            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Save.xlsx");
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\Save.xlsx");
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             // Get the first sheet
             Sheet sheet = workbook.getSheetAt(0);
@@ -100,71 +97,302 @@ public class UserDaoTest {
             }
             workbook.close();
             file.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+    @Test
+    public void testLogin() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\Login.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                user.setEmail(str.nextToken());
+                user.setPassword(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testUpdateUser(user));
+                        UserDao.login(user.getEmail(), user.getPassword());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testUpdateUser(user));
+                        UserDao.login(user.getEmail(), user.getPassword());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
             System.out.println("fail test case");
         }
     }
 
-//    @Test
-//    public void testLogin() {
-//        System.out.println("login");
-//        String email = "";
-//        String password = "";
-//        User expResult = null;
-//        User result = UserDao.login(email, password);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    @Test
-//    public void testGetSecurityQuestion() {
-//        System.out.println("getSecurityQuestion");
-//        String email = "";
-//        User expResult = null;
-//        User result = UserDao.getSecurityQuestion(email);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    @Test
-//    public void testUpdate() {
-//        System.out.println("update");
-//        String email = "";
-//        String newPassword = "";
-//        UserDao.update(email, newPassword);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    @Test
-//    public void testGetAllRecords() {
-//        System.out.println("getAllRecords");
-//        String email = "";
-//        ArrayList<User> expResult = null;
-//        ArrayList<User> result = UserDao.getAllRecords(email);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    @Test
-//    public void testChangeStatus() {
-//        System.out.println("changeStatus");
-//        String email = "";
-//        String status = "";
-//        UserDao.changeStatus(email, status);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    @Test
-//    public void testDelete() {
-//        System.out.println("delete");
-//        String email = "";
-//        UserDao.delete(email);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    @Test
+    public void testGetSecurityQuestion() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetSecurityQuestion.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                user.setEmail(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testUpdateUser(user));
+                        UserDao.getSecurityQuestion(user.getEmail());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testUpdateUser(user));
+                        UserDao.getSecurityQuestion(user.getEmail());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testUpdate() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateNewPassword.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                user.setEmail(str.nextToken());
+                user.setPassword(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testUpdateUser(user));
+                        UserDao.update(user.getEmail(), user.getPassword());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testUpdateUser(user));
+                        UserDao.update(user.getEmail(), user.getPassword());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testGetAllRecords() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetAllRecords.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                user.setEmail(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testEmailUser(user));
+                        UserDao.getAllRecords(user.getEmail());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testEmailUser(user));
+                        UserDao.getAllRecords(user.getEmail());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testChangeStatus() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\ChangeStatus.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_BOOLEAN:
+                            data += cell.getBooleanCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                System.out.println(data);
+                user.setEmail(str.nextToken());
+                user.setStatus(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testEmailUser(user));
+                        UserDao.changeStatus(user.getEmail(), user.getStatus());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testEmailUser(user));
+                        UserDao.changeStatus(user.getEmail(), user.getStatus());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testDelete() {
+        User user = new User();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\Delete.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                user.setEmail(str.nextToken());
+                System.out.println(user.getEmail());
+                {
+                    if (i == 0) {
+                        assertEquals(true, User.testEmailUser(user));
+                        UserDao.delete(user.getEmail());
+                        i++;
+                    } else {
+                        assertEquals(false, User.testEmailUser(user));
+                        UserDao.getAllRecords(user.getEmail());
+                    }
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 }

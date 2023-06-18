@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GraphicsUtilities.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Bank-Management-System&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">swing.shadow</a> &gt; <span class="el_source">GraphicsUtilities.java</span></div><h1>GraphicsUtilities.java</h1><pre class="source lang-java linenums">package swing.shadow;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.awt.GraphicsConfiguration;
+import java.awt.Transparency;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+
+public class GraphicsUtilities {
+
+<span class="nc" id="L19">    private GraphicsUtilities() {</span>
+<span class="nc" id="L20">    }</span>
+
+    // Returns the graphics configuration for the primary screen
+    private static GraphicsConfiguration getGraphicsConfiguration() {
+<span class="nc" id="L24">        return GraphicsEnvironment.getLocalGraphicsEnvironment().</span>
+<span class="nc" id="L25">                getDefaultScreenDevice().getDefaultConfiguration();</span>
+    }
+
+    public static BufferedImage createColorModelCompatibleImage(BufferedImage image) {
+<span class="nc" id="L29">        ColorModel cm = image.getColorModel();</span>
+<span class="nc" id="L30">        return new BufferedImage(cm,</span>
+<span class="nc" id="L31">                cm.createCompatibleWritableRaster(image.getWidth(),</span>
+<span class="nc" id="L32">                        image.getHeight()),</span>
+<span class="nc" id="L33">                cm.isAlphaPremultiplied(), null);</span>
+    }
+
+    public static BufferedImage createCompatibleImage(BufferedImage image) {
+<span class="nc" id="L37">        return createCompatibleImage(image, image.getWidth(), image.getHeight());</span>
+    }
+
+    public static BufferedImage createCompatibleImage(BufferedImage image,
+            int width, int height) {
+<span class="nc" id="L42">        return getGraphicsConfiguration().createCompatibleImage(width, height,</span>
+<span class="nc" id="L43">                image.getTransparency());</span>
+    }
+
+    public static BufferedImage createCompatibleImage(int width, int height) {
+<span class="nc" id="L47">        return getGraphicsConfiguration().createCompatibleImage(width, height);</span>
+    }
+
+    public static BufferedImage createCompatibleTranslucentImage(int width,
+            int height) {
+<span class="nc" id="L52">        return getGraphicsConfiguration().createCompatibleImage(width, height,</span>
+                Transparency.TRANSLUCENT);
+    }
+
+    public static BufferedImage loadCompatibleImage(URL resource)
+            throws IOException {
+<span class="nc" id="L58">        BufferedImage image = ImageIO.read(resource);</span>
+<span class="nc" id="L59">        return toCompatibleImage(image);</span>
+    }
+
+    public static BufferedImage toCompatibleImage(BufferedImage image) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (image.getColorModel().equals(</span>
+<span class="nc" id="L64">                getGraphicsConfiguration().getColorModel())) {</span>
+<span class="nc" id="L65">            return image;</span>
+        }
+        BufferedImage compatibleImage
+<span class="nc" id="L68">                = getGraphicsConfiguration().createCompatibleImage(</span>
+<span class="nc" id="L69">                        image.getWidth(), image.getHeight(),</span>
+<span class="nc" id="L70">                        image.getTransparency());</span>
+<span class="nc" id="L71">        Graphics g = compatibleImage.getGraphics();</span>
+<span class="nc" id="L72">        g.drawImage(image, 0, 0, null);</span>
+<span class="nc" id="L73">        g.dispose();</span>
+<span class="nc" id="L74">        return compatibleImage;</span>
+    }
+
+    public static BufferedImage createThumbnailFast(BufferedImage image,
+            int newSize) {
+        float ratio;
+<span class="nc" id="L80">        int width = image.getWidth();</span>
+<span class="nc" id="L81">        int height = image.getHeight();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (width &gt; height) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (newSize &gt;= width) {</span>
+<span class="nc" id="L84">                throw new IllegalArgumentException(&quot;newSize must be lower than&quot;</span>
+                        + &quot; the image width&quot;);
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            } else if (newSize &lt;= 0) {</span>
+<span class="nc" id="L87">                throw new IllegalArgumentException(&quot;newSize must&quot;</span>
+                        + &quot; be greater than 0&quot;);
+            }
+<span class="nc" id="L90">            ratio = (float) width / (float) height;</span>
+<span class="nc" id="L91">            width = newSize;</span>
+<span class="nc" id="L92">            height = (int) (newSize / ratio);</span>
+        } else {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (newSize &gt;= height) {</span>
+<span class="nc" id="L95">                throw new IllegalArgumentException(&quot;newSize must be lower than&quot;</span>
+                        + &quot; the image height&quot;);
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            } else if (newSize &lt;= 0) {</span>
+<span class="nc" id="L98">                throw new IllegalArgumentException(&quot;newSize must&quot;</span>
+                        + &quot; be greater than 0&quot;);
+            }
+<span class="nc" id="L101">            ratio = (float) height / (float) width;</span>
+<span class="nc" id="L102">            height = newSize;</span>
+<span class="nc" id="L103">            width = (int) (newSize / ratio);</span>
+        }
+<span class="nc" id="L105">        BufferedImage temp = createCompatibleImage(image, width, height);</span>
+<span class="nc" id="L106">        Graphics2D g2 = temp.createGraphics();</span>
+<span class="nc" id="L107">        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,</span>
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+<span class="nc" id="L109">        g2.drawImage(image, 0, 0, temp.getWidth(), temp.getHeight(), null);</span>
+<span class="nc" id="L110">        g2.dispose();</span>
+<span class="nc" id="L111">        return temp;</span>
+    }
+
+    public static BufferedImage createThumbnailFast(BufferedImage image,
+            int newWidth, int newHeight) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (newWidth &gt;= image.getWidth()</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                || newHeight &gt;= image.getHeight()) {</span>
+<span class="nc" id="L118">            throw new IllegalArgumentException(&quot;newWidth and newHeight cannot&quot;</span>
+                    + &quot; be greater than the image&quot;
+                    + &quot; dimensions&quot;);
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        } else if (newWidth &lt;= 0 || newHeight &lt;= 0) {</span>
+<span class="nc" id="L122">            throw new IllegalArgumentException(&quot;newWidth and newHeight must&quot;</span>
+                    + &quot; be greater than 0&quot;);
+        }
+<span class="nc" id="L125">        BufferedImage temp = createCompatibleImage(image, newWidth, newHeight);</span>
+<span class="nc" id="L126">        Graphics2D g2 = temp.createGraphics();</span>
+<span class="nc" id="L127">        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,</span>
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+<span class="nc" id="L129">        g2.drawImage(image, 0, 0, temp.getWidth(), temp.getHeight(), null);</span>
+<span class="nc" id="L130">        g2.dispose();</span>
+<span class="nc" id="L131">        return temp;</span>
+    }
+
+    public static BufferedImage createThumbnail(BufferedImage image,
+            int newSize) {
+<span class="nc" id="L136">        int width = image.getWidth();</span>
+<span class="nc" id="L137">        int height = image.getHeight();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        boolean isWidthGreater = width &gt; height;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (isWidthGreater) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (newSize &gt;= width) {</span>
+<span class="nc" id="L141">                throw new IllegalArgumentException(&quot;newSize must be lower than&quot;</span>
+                        + &quot; the image width&quot;);
+            }
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        } else if (newSize &gt;= height) {</span>
+<span class="nc" id="L145">            throw new IllegalArgumentException(&quot;newSize must be lower than&quot;</span>
+                    + &quot; the image height&quot;);
+        }
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (newSize &lt;= 0) {</span>
+<span class="nc" id="L149">            throw new IllegalArgumentException(&quot;newSize must&quot;</span>
+                    + &quot; be greater than 0&quot;);
+        }
+<span class="nc" id="L152">        float ratioWH = (float) width / (float) height;</span>
+<span class="nc" id="L153">        float ratioHW = (float) height / (float) width;</span>
+<span class="nc" id="L154">        BufferedImage thumb = image;</span>
+        do {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (isWidthGreater) {</span>
+<span class="nc" id="L157">                width /= 2;</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                if (width &lt; newSize) {</span>
+<span class="nc" id="L159">                    width = newSize;</span>
+                }
+<span class="nc" id="L161">                height = (int) (width / ratioWH);</span>
+            } else {
+<span class="nc" id="L163">                height /= 2;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                if (height &lt; newSize) {</span>
+<span class="nc" id="L165">                    height = newSize;</span>
+                }
+<span class="nc" id="L167">                width = (int) (height / ratioHW);</span>
+            }
+<span class="nc" id="L169">            BufferedImage temp = createCompatibleImage(image, width, height);</span>
+<span class="nc" id="L170">            Graphics2D g2 = temp.createGraphics();</span>
+<span class="nc" id="L171">            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,</span>
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+<span class="nc" id="L173">            g2.drawImage(thumb, 0, 0, temp.getWidth(), temp.getHeight(), null);</span>
+<span class="nc" id="L174">            g2.dispose();</span>
+<span class="nc" id="L175">            thumb = temp;</span>
+<span class="nc bnc" id="L176" title="All 4 branches missed.">        } while (newSize != (isWidthGreater ? width : height));</span>
+<span class="nc" id="L177">        return thumb;</span>
+    }
+
+    public static BufferedImage createThumbnail(BufferedImage image,
+            int newWidth, int newHeight) {
+<span class="nc" id="L182">        int width = image.getWidth();</span>
+<span class="nc" id="L183">        int height = image.getHeight();</span>
+
+<span class="nc bnc" id="L185" title="All 4 branches missed.">        if (newWidth &gt;= width || newHeight &gt;= height) {</span>
+<span class="nc" id="L186">            throw new IllegalArgumentException(&quot;newWidth and newHeight cannot&quot;</span>
+                    + &quot; be greater than the image&quot;
+                    + &quot; dimensions&quot;);
+<span class="nc bnc" id="L189" title="All 4 branches missed.">        } else if (newWidth &lt;= 0 || newHeight &lt;= 0) {</span>
+<span class="nc" id="L190">            throw new IllegalArgumentException(&quot;newWidth and newHeight must&quot;</span>
+                    + &quot; be greater than 0&quot;);
+        }
+<span class="nc" id="L193">        BufferedImage thumb = image;</span>
+        do {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (width &gt; newWidth) {</span>
+<span class="nc" id="L196">                width /= 2;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">                if (width &lt; newWidth) {</span>
+<span class="nc" id="L198">                    width = newWidth;</span>
+                }
+            }
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (height &gt; newHeight) {</span>
+<span class="nc" id="L202">                height /= 2;</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                if (height &lt; newHeight) {</span>
+<span class="nc" id="L204">                    height = newHeight;</span>
+                }
+            }
+<span class="nc" id="L207">            BufferedImage temp = createCompatibleImage(image, width, height);</span>
+<span class="nc" id="L208">            Graphics2D g2 = temp.createGraphics();</span>
+<span class="nc" id="L209">            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,</span>
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+<span class="nc" id="L211">            g2.drawImage(thumb, 0, 0, temp.getWidth(), temp.getHeight(), null);</span>
+<span class="nc" id="L212">            g2.dispose();</span>
+<span class="nc" id="L213">            thumb = temp;</span>
+<span class="nc bnc" id="L214" title="All 4 branches missed.">        } while (width != newWidth || height != newHeight);</span>
+<span class="nc" id="L215">        return thumb;</span>
+    }
+
+    public static int[] getPixels(BufferedImage img,
+            int x, int y, int w, int h, int[] pixels) {
+<span class="nc bnc" id="L220" title="All 4 branches missed.">        if (w == 0 || h == 0) {</span>
+<span class="nc" id="L221">            return new int[0];</span>
+        }
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (pixels == null) {</span>
+<span class="nc" id="L224">            pixels = new int[w * h];</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        } else if (pixels.length &lt; w * h) {</span>
+<span class="nc" id="L226">            throw new IllegalArgumentException(&quot;pixels array must have a length&quot;</span>
+                    + &quot; &gt;= w*h&quot;);
+        }
+<span class="nc" id="L229">        int imageType = img.getType();</span>
+<span class="nc bnc" id="L230" title="All 4 branches missed.">        if (imageType == BufferedImage.TYPE_INT_ARGB</span>
+                || imageType == BufferedImage.TYPE_INT_RGB) {
+<span class="nc" id="L232">            Raster raster = img.getRaster();</span>
+<span class="nc" id="L233">            return (int[]) raster.getDataElements(x, y, w, h, pixels);</span>
+        }
+        // Unmanages the image
+<span class="nc" id="L236">        return img.getRGB(x, y, w, h, pixels, 0, w);</span>
+    }
+
+    public static void setPixels(BufferedImage img,
+            int x, int y, int w, int h, int[] pixels) {
+<span class="nc bnc" id="L241" title="All 6 branches missed.">        if (pixels == null || w == 0 || h == 0) {</span>
+<span class="nc" id="L242">            return;</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        } else if (pixels.length &lt; w * h) {</span>
+<span class="nc" id="L244">            throw new IllegalArgumentException(&quot;pixels array must have a length&quot;</span>
+                    + &quot; &gt;= w*h&quot;);
+        }
+
+<span class="nc" id="L248">        int imageType = img.getType();</span>
+<span class="nc bnc" id="L249" title="All 4 branches missed.">        if (imageType == BufferedImage.TYPE_INT_ARGB</span>
+                || imageType == BufferedImage.TYPE_INT_RGB) {
+<span class="nc" id="L251">            WritableRaster raster = img.getRaster();</span>
+<span class="nc" id="L252">            raster.setDataElements(x, y, w, h, pixels);</span>
+<span class="nc" id="L253">        } else {</span>
+            // Unmanages the image
+<span class="nc" id="L255">            img.setRGB(x, y, w, h, pixels, 0, w);</span>
+        }
+<span class="nc" id="L257">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

@@ -1,18 +1,11 @@
 package dao;
 
-import bank.sec;
 import bank.DbOperations;
 import javax.swing.JOptionPane;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import model.User;
-import java.sql.*;
 import java.sql.ResultSet;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class UserDao {
 
@@ -21,99 +14,122 @@ public class UserDao {
     public static String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"; // at least one digit, at least 8 characters, at least one lowercase, at least uppercase, at least one special character
     public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
     public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
-    
-    
+
     public static void save(User user) {
         String query = "insert into user(name,email,mobileNumber,address,password,securityQuestion,answer,status) values('" + user.getName() + "','" + user.getEmail() + "','" + user.getMobileNumber() + "','" + user.getAddress() + "','" + user.getPassword() + "','" + user.getSecurityQuestion() + "','" + user.getAnswer() + "','" + user.getStatus() + "')";
-        if(checkDuplicatedEmail(user.getEmail())){
+        if (checkDuplicatedEmail(user.getEmail())) {
             JOptionPane.showMessageDialog(null, "Email is already exist");
-        }
-        else if (user.getName().matches(namePattern) && user.getEmail().matches(emailPattern) && user.getMobileNumber().matches(mobileNumberPattern) && user.getAddress().matches(addressPattern) && user.getPassword().matches(passwordPattern) && !user.getSecurityQuestion().equals("") && !user.getAnswer().equals(""))
-        {
+        } else if (user.getName().matches(namePattern) && user.getEmail().matches(emailPattern) && user.getMobileNumber().matches(mobileNumberPattern) && user.getAddress().matches(addressPattern) && user.getPassword().matches(passwordPattern) && !user.getSecurityQuestion().equals("") && !user.getAnswer().equals("")) {
             DbOperations.setDataOrDelete(query, "Saved Successfully");
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Invalid data");
         }
     }
-    
+
     public static User login(String email, String password) {
         User user = null;
-        try {
-            ResultSet rs = DbOperations.getData("select *from user where email='" + email + "' and password='" + password + "'");
-            while (rs.next()) {
-                user = new User();
-                user.setStatus(rs.getString("status"));
+        if (email.matches(emailPattern) && password.matches(passwordPattern)) {
+            try {
+                ResultSet rs = DbOperations.getData("select *from user where email='" + email + "' and password='" + password + "'");
+                while (rs.next()) {
+                    user = new User();
+                    user.setStatus(rs.getString("status"));
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Email or Password is incorrect");
         }
         return user;
     }
 
     public static User getSecurityQuestion(String email) {
         User user = null;
-        try {
-            ResultSet rs = DbOperations.getData("select *from user where email = '" + email + "'");
-            while (rs.next()) {
-                user = new User();
-                user.setSecurityQuestion(rs.getString("securityQuestion"));
-                user.setAnswer(rs.getString("answer"));
+        if (email.matches(emailPattern)) {
+            try {
+                ResultSet rs = DbOperations.getData("select *from user where email = '" + email + "'");
+                while (rs.next()) {
+                    user = new User();
+                    user.setSecurityQuestion(rs.getString("securityQuestion"));
+                    user.setAnswer(rs.getString("answer"));
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+        } else {
+            JOptionPane.showMessageDialog(null, "Email is incorrect");
         }
         return user;
     }
 
     public static void update(String email, String newPassword) {
         String query = "update user set password = '" + newPassword + "' where email = '" + email + "'";
-        DbOperations.setDataOrDelete(query, "Password Changed Successfully");
+        if (email.matches(emailPattern) && newPassword.matches(passwordPattern)) {
+            DbOperations.setDataOrDelete(query, "Password Changed Successfully");
+        } else {
+            JOptionPane.showMessageDialog(null, "Email or Password is incorrect");
+        }
     }
 
     public static ArrayList<User> getAllRecords(String email) {
         ArrayList<User> arrayList = new ArrayList<>();
-        try {
-            ResultSet rs = DbOperations.getData("select *from user where email like '%" + email + "%'");
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setMobileNumber(rs.getString("mobileNumber"));
-                user.setAddress(rs.getString("address"));
-                user.setPassword(rs.getString("password"));
-                user.setSecurityQuestion(rs.getString("securityQuestion"));
-                user.setAnswer(rs.getString("answer"));
-                user.setStatus(rs.getString("status"));
-                arrayList.add(user);
+        if (email.matches(emailPattern)) {
+            try {
+                ResultSet rs = DbOperations.getData("select *from user where email like '%" + email + "%'");
+                while (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setName(rs.getString("name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setMobileNumber(rs.getString("mobileNumber"));
+                    user.setAddress(rs.getString("address"));
+                    user.setPassword(rs.getString("password"));
+                    user.setSecurityQuestion(rs.getString("securityQuestion"));
+                    user.setAnswer(rs.getString("answer"));
+                    user.setStatus(rs.getString("status"));
+                    arrayList.add(user);
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e);
+            return arrayList;
+        } else {
+            JOptionPane.showMessageDialog(null, "Email is Incorrect");
+            return null;
         }
-        return arrayList;
     }
 
     public static void changeStatus(String email, String status) {
         String query = "update user set status = '" + status + "' where email = '" + email + "'";
-        DbOperations.setDataOrDelete(query, "Status Changed Succesfully");
+        if(email.matches(emailPattern))
+        {
+            DbOperations.setDataOrDelete(query, "Status Changed Succesfully");
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Email is incorrect");
     }
 
     public static void delete(String email) {
         String query = "delete from user where email = '" + email + "'";
-        DbOperations.setDataOrDelete(query, "User Deleted Successfully");
+        if (email.matches(emailPattern)) {
+            DbOperations.setDataOrDelete(query, "User Deleted Successfully");
+        } else {
+            JOptionPane.showMessageDialog(null, "Email is incorrect");
+        }
     }
-    
-    private static boolean checkDuplicatedEmail(String email){
-        String query = "select *from user where email = '"+email+"'";
+
+    private static boolean checkDuplicatedEmail(String email) {
+        String query = "select *from user where email = '" + email + "'";
         ResultSet rs = DbOperations.getData(query);
         boolean duplicated = false;
-        try{
-            if(rs.next()){
+        try {
+            if (rs.next()) {
                 duplicated = true;
             }
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         return duplicated;

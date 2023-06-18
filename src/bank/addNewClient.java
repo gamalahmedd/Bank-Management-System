@@ -10,9 +10,11 @@ import java.text.SimpleDateFormat;
 
 public class addNewClient extends javax.swing.JFrame {
 
-    public String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
-    public String mobileNumberPattern = "^01[0125][0-9]{8}$";
+    public static String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
+    public String mobileNumberPattern = "^01[0125][0-9]{8}$"; //maximum 11 digit, must start with 01[0125]
+    public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
     public String NI = "^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$";
+    public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
     public String userMail;
     
     public addNewClient() {
@@ -35,7 +37,7 @@ public class addNewClient extends javax.swing.JFrame {
         String nationality = txtNationality.getText();
         String city = txtCity.getText();
         String occupation = txtOccupation.getText();
-        if(!name.equals("") && !address.equals("") && phoneno.matches(mobileNumberPattern) && nationalId.matches(NI) && email.matches(emailPattern) && !nationality.equals("") && !city.equals("") && !occupation.equals("")){
+        if(name.matches(namePattern) && address.matches(addressPattern) && phoneno.matches(mobileNumberPattern) && nationalId.matches(NI) && email.matches(emailPattern) && !nationality.equals("") && !city.equals("") && !occupation.equals("")){
             btnSave.setEnabled(true);
         }
         else
