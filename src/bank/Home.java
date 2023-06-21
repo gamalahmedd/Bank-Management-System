@@ -13,7 +13,7 @@ public class Home extends javax.swing.JFrame {
     public Home(String useremail) {
         initComponents();
         email = useremail;
-        if (!email.equals("admin@gmail.com")) {
+        if (!email.equals("admin111@gmail.com")) {
             btnVerifyUsers.setVisible(false);
             btnDeleteUser.setVisible(false);
         }

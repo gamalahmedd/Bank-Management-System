@@ -1,4 +1,5 @@
 package bank;
+
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.Statement;
@@ -7,6 +8,7 @@ import javax.swing.JOptionPane;
 import model.Client;
 import dao.ClientDao;
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class addNewClient extends javax.swing.JFrame {
 
@@ -15,20 +17,23 @@ public class addNewClient extends javax.swing.JFrame {
     public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
     public String NI = "^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$";
     public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
+    public static String IDPattern = "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$";
     public String userMail;
-    
+    boolean flag = true;
+
     public addNewClient() {
         initComponents();
     }
-    public addNewClient(String useremail){
+
+    public addNewClient(String useremail) {
         initComponents();
         btnSave.setEnabled(false);
         SpinCash.setEnabled(false);
         userMail = useremail;
     }
-    
-    public void validateFields(){
-        
+
+    public void validateFields() {
+        String clientId = jLabel8.getText();
         String name = txtName.getText();
         String address = txtAddress.getText();
         String phoneno = txtPhoneNumber.getText();
@@ -37,14 +42,13 @@ public class addNewClient extends javax.swing.JFrame {
         String nationality = txtNationality.getText();
         String city = txtCity.getText();
         String occupation = txtOccupation.getText();
-        if(name.matches(namePattern) && address.matches(addressPattern) && phoneno.matches(mobileNumberPattern) && nationalId.matches(NI) && email.matches(emailPattern) && !nationality.equals("") && !city.equals("") && !occupation.equals("")){
+        if (clientId.matches(IDPattern) && name.matches(namePattern) && address.matches(addressPattern) && phoneno.matches(mobileNumberPattern) && nationalId.matches(NI) && email.matches(emailPattern) && !nationality.equals("") && !city.equals("") && !occupation.equals("")) {
             btnSave.setEnabled(true);
-        }
-        else
+        } else {
             btnSave.setEnabled(false);
+        }
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -278,7 +282,7 @@ public class addNewClient extends javax.swing.JFrame {
     static Connection con;
     static Statement st;
     private void jLabel8ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jLabel8ComponentShown
-        
+
     }//GEN-LAST:event_jLabel8ComponentShown
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -295,9 +299,9 @@ public class addNewClient extends javax.swing.JFrame {
         Client client = new Client();
         client.setClientId(jLabel8.getText());
         client.setName(txtName.getText());
-        client.setCash((int)SpinCash.getValue());
+        client.setCash((int) SpinCash.getValue());
         client.setAddress(txtAddress.getText());
-        client.setGender((String)CombGender.getSelectedItem());
+        client.setGender((String) CombGender.getSelectedItem());
         client.setPhoneno(txtPhoneNumber.getText());
         SimpleDateFormat Date = new SimpleDateFormat("yyyy-MM-dd");
         String dateofbirth = Date.format(txtDOB.getDate());
@@ -310,27 +314,11 @@ public class addNewClient extends javax.swing.JFrame {
         String register = Date.format(txtRegister.getDate());
         client.setRegisterdate(register);
         ClientDao.save(client);
+        generateID();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-        sec c1 = new sec();
-        try{
-            con = c1.connect();
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery("select max(clientId) from client");
-            if(rs.first()){
-                int id = rs.getInt(1);
-                id = id + 1;
-                String str =String.valueOf(id);
-                jLabel8.setText(str);
-            }
-            else
-                jLabel8.setText("1");
-        }
-        catch(SQLException e)
-        {
-            JOptionPane.showMessageDialog(null, e);
-        }
+        generateID();
     }//GEN-LAST:event_formComponentShown
 
     private void txtPhoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneNumberKeyReleased
@@ -370,8 +358,14 @@ public class addNewClient extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPhoneNumberActionPerformed
 
     
+    private void generateID()
+    {
+        UUID clientId;
+        clientId = UUID.randomUUID();
+        jLabel8.setText(clientId.toString());
+    }
     public static void main(String args[]) {
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new addNewClient().setVisible(true);

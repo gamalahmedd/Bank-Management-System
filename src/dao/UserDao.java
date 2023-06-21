@@ -15,14 +15,22 @@ public class UserDao {
     public static String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
     public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
 
-    public static void save(User user) {
+    public static boolean save(User user) {
         String query = "insert into user(name,email,mobileNumber,address,password,securityQuestion,answer,status) values('" + user.getName() + "','" + user.getEmail() + "','" + user.getMobileNumber() + "','" + user.getAddress() + "','" + user.getPassword() + "','" + user.getSecurityQuestion() + "','" + user.getAnswer() + "','" + user.getStatus() + "')";
-        if (checkDuplicatedEmail(user.getEmail())) {
+        if (checkDuplicatedEmail(user.getEmail()))
+        {
             JOptionPane.showMessageDialog(null, "Email is already exist");
-        } else if (user.getName().matches(namePattern) && user.getEmail().matches(emailPattern) && user.getMobileNumber().matches(mobileNumberPattern) && user.getAddress().matches(addressPattern) && user.getPassword().matches(passwordPattern) && !user.getSecurityQuestion().equals("") && !user.getAnswer().equals("")) {
+            return false; 
+        } 
+        else if (user.getName().matches(namePattern) && user.getEmail().matches(emailPattern) && user.getMobileNumber().matches(mobileNumberPattern) && user.getAddress().matches(addressPattern) && user.getPassword().matches(passwordPattern)) 
+        {
             DbOperations.setDataOrDelete(query, "Saved Successfully");
-        } else {
+            return true;
+        } 
+        else 
+        {
             JOptionPane.showMessageDialog(null, "Invalid data");
+            return false;
         }
     }
 
@@ -31,17 +39,18 @@ public class UserDao {
         if (email.matches(emailPattern) && password.matches(passwordPattern)) {
             try {
                 ResultSet rs = DbOperations.getData("select *from user where email='" + email + "' and password='" + password + "'");
-                while (rs.next()) {
+                if (rs.next()) {
                     user = new User();
                     user.setStatus(rs.getString("status"));
+                    JOptionPane.showMessageDialog(null, "User found");
+                } else {
+                    JOptionPane.showMessageDialog(null, "User not found");
                 }
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Email or Password is incorrect");
+        } else {
+            JOptionPane.showMessageDialog(null, "Email or Password is Invalid");
         }
         return user;
     }
@@ -51,26 +60,48 @@ public class UserDao {
         if (email.matches(emailPattern)) {
             try {
                 ResultSet rs = DbOperations.getData("select *from user where email = '" + email + "'");
-                while (rs.next()) {
+                if (rs.next()) {
                     user = new User();
                     user.setSecurityQuestion(rs.getString("securityQuestion"));
                     user.setAnswer(rs.getString("answer"));
+                    JOptionPane.showMessageDialog(null, "User found");
+                } else {
+                    JOptionPane.showMessageDialog(null, "User not found");
                 }
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Email is incorrect");
+            JOptionPane.showMessageDialog(null, "Email is invalid");
         }
         return user;
     }
 
     public static void update(String email, String newPassword) {
         String query = "update user set password = '" + newPassword + "' where email = '" + email + "'";
-        if (email.matches(emailPattern) && newPassword.matches(passwordPattern)) {
-            DbOperations.setDataOrDelete(query, "Password Changed Successfully");
-        } else {
-            JOptionPane.showMessageDialog(null, "Email or Password is incorrect");
+        if (email.matches(emailPattern) && newPassword.matches(passwordPattern))
+        {
+            String search = "select *from user where email = '"+email+"'";
+            ResultSet rs = DbOperations.getData(search);
+            try
+            {
+                if(rs.next())
+                {
+                    DbOperations.setDataOrDelete(query, "User updated successfully");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "User not found");
+                }
+            }
+            catch(SQLException e)
+            {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+        } 
+        else 
+        {
+            JOptionPane.showMessageDialog(null, "Email or Password is invalid");
         }
     }
 
@@ -78,8 +109,8 @@ public class UserDao {
         ArrayList<User> arrayList = new ArrayList<>();
         if (email.matches(emailPattern)) {
             try {
-                ResultSet rs = DbOperations.getData("select *from user where email like '%" + email + "%'");
-                while (rs.next()) {
+                ResultSet rs = DbOperations.getData("select *from user where email = '"+email+"'");
+                if(rs.next()) {
                     User user = new User();
                     user.setId(rs.getInt("id"));
                     user.setName(rs.getString("name"));
@@ -91,33 +122,69 @@ public class UserDao {
                     user.setAnswer(rs.getString("answer"));
                     user.setStatus(rs.getString("status"));
                     arrayList.add(user);
+                    JOptionPane.showMessageDialog(null, "User found");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "User not found");
                 }
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
             return arrayList;
         } else {
-            JOptionPane.showMessageDialog(null, "Email is Incorrect");
+            JOptionPane.showMessageDialog(null, "Email is Invalid");
             return null;
         }
     }
 
     public static void changeStatus(String email, String status) {
         String query = "update user set status = '" + status + "' where email = '" + email + "'";
-        if(email.matches(emailPattern))
-        {
-            DbOperations.setDataOrDelete(query, "Status Changed Succesfully");
+        if (email.matches(emailPattern)) {
+            String search = "select *from user where email = '"+email+"'";
+            ResultSet rs = DbOperations.getData(search);
+            try
+            {
+                if(rs.next())
+                {
+                    DbOperations.setDataOrDelete(query, "Status changed successfully");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "User not found");
+                }
+            }
+            catch(SQLException e)
+            {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Email is invalid");
         }
-        else
-            JOptionPane.showMessageDialog(null, "Email is incorrect");
     }
 
     public static void delete(String email) {
         String query = "delete from user where email = '" + email + "'";
         if (email.matches(emailPattern)) {
-            DbOperations.setDataOrDelete(query, "User Deleted Successfully");
+            String search = "select *from user where email = '"+email+"'";
+            ResultSet rs = DbOperations.getData(search);
+            try
+            {
+                if(rs.next())
+                {
+                    DbOperations.setDataOrDelete(query, "User deleted successfully");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "User not found");
+                }
+            }
+            catch(SQLException e)
+            {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Email is incorrect");
+            JOptionPane.showMessageDialog(null, "Email is invalid");
         }
     }
 
