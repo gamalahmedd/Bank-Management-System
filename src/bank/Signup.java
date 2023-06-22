@@ -250,6 +250,7 @@ public class Signup extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         User user = new User();
+        UserDao operations = new UserDao();
         user.setName(txtName.getText());
         user.setEmail(txtEmail.getText());
         user.setMobileNumber(txtMobileNumber.getText());
@@ -258,7 +259,7 @@ public class Signup extends javax.swing.JFrame {
         user.setSecurityQuestion(txtSecurityQuestion.getText());
         user.setAnswer(txtAnswer.getText());
         user.setStatus("false");
-        UserDao.save(user);
+        operations.save(user);
         clear();
     }//GEN-LAST:event_btnSaveActionPerformed
 

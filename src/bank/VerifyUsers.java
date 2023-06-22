@@ -15,6 +15,7 @@ import swing.EventTextField;
 public class VerifyUsers extends javax.swing.JFrame {
 
     public String userMail;
+    DbOperations db;
 
     public VerifyUsers() {
         initComponents();
@@ -53,14 +54,14 @@ public class VerifyUsers extends javax.swing.JFrame {
             int limit = 10;
             String sqlCount = "select count(*) from user";
             int count = 0;
-            ResultSet r = DbOperations.getData(sqlCount);
+            ResultSet r = db.getData(sqlCount);
             if(r.first()){
                 count = r.getInt(1);
             }
             int totalPage = (int) Math.ceil(count/limit);
             pagination1.setPagegination(page, totalPage);
             ArrayList<User> list = new ArrayList<>();
-            ResultSet rs = DbOperations.getData("select *from user where email like '%"+email+"%' limit "+(page-1)*limit+" ," + limit);
+            ResultSet rs = db.getData("select *from user where email like '%"+email+"%' limit "+(page-1)*limit+" ," + limit);
             while(rs.next()){
                 User user = new User();
                 user.setId(rs.getInt("id"));
@@ -177,6 +178,7 @@ public class VerifyUsers extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        UserDao operations = new UserDao();
         int index = jTable1.getSelectedRow();
         TableModel model = jTable1.getModel();
         String email = model.getValueAt(index, 2).toString();
@@ -188,7 +190,7 @@ public class VerifyUsers extends javax.swing.JFrame {
         }
         int a = JOptionPane.showConfirmDialog(null, "Do you want to change status?", "Select", JOptionPane.YES_NO_OPTION);
         if (a == 0) {
-            UserDao.changeStatus(email, status);
+            operations.changeStatus(email, status);
             setVisible(false);
             new VerifyUsers(userMail).setVisible(true);
         }

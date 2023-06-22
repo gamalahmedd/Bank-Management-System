@@ -233,10 +233,11 @@ public class ForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        UserDao operations = new UserDao();
         String answer = txtAnswer.getText();
         String newPassword = txtNewPassword.getText();
         if(answer.equals(dbAnswer)){
-            UserDao.update(email, newPassword);
+            operations.update(email, newPassword);
             clear();
         }
         else{
@@ -245,9 +246,10 @@ public class ForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        UserDao operations = new UserDao();
         email = txtEmail.getText();
         User user = null;
-        user = UserDao.getSecurityQuestion(email);
+        user = operations.getSecurityQuestion(email);
         if(user == null){
             JOptionPane.showMessageDialog(null, "Incorrect Email","Message",JOptionPane.ERROR_MESSAGE);
         }

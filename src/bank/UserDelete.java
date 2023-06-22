@@ -15,6 +15,7 @@ import swing.EventTextField;
 public class UserDelete extends javax.swing.JFrame {
 
     public String userMail;
+    DbOperations db;
 
     public UserDelete() {
         initComponents();
@@ -43,18 +44,19 @@ public class UserDelete extends javax.swing.JFrame {
     }
 
     public void getAllRecords(String email, int page) {
+        db = new DbOperations();
         try {
             int limit = 10;
             String sqlCount = "select count(*) from user";
             int count = 0;
-            ResultSet r = DbOperations.getData(sqlCount);
+            ResultSet r = db.getData(sqlCount);
             if(r.first()){
                 count = r.getInt(1);
             }
             int totalPage = (int) Math.ceil(count/limit);
             pagination1.setPagegination(page, totalPage);
             ArrayList<User> list = new ArrayList<>();
-            ResultSet rs = DbOperations.getData("select *from user where email like '%"+email+"%' limit "+(page-1)*limit+" ,"+limit);
+            ResultSet rs = db.getData("select *from user where email like '%"+email+"%' limit "+(page-1)*limit+" ,"+limit);
             while(rs.next()){
                 User user = new User();
                 user.setId(rs.getInt("id"));
@@ -168,12 +170,13 @@ public class UserDelete extends javax.swing.JFrame {
     }//GEN-LAST:event_formComponentShown
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        UserDao operations = new UserDao();
         int index = jTable1.getSelectedRow();
         TableModel model = jTable1.getModel();
         String email = model.getValueAt(index, 1).toString();
         int a = JOptionPane.showConfirmDialog(null, "Are you sure to delete this user", "Select", JOptionPane.YES_NO_OPTION);
         if (a == 0) {
-            UserDao.delete(email);
+            operations.delete(email);
             setVisible(false);
             new UserDelete(userMail).setVisible(true);
         }

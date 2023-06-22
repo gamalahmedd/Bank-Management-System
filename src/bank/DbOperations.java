@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 public class DbOperations {
     static Connection con;
     static Statement st;
-    public static void setDataOrDelete(String Query, String msg){
+    public boolean setDataOrDelete(String Query, String msg){
         sec c1 = new sec();
         try{
             con = c1.connect();
@@ -17,13 +17,15 @@ public class DbOperations {
             st.executeUpdate(Query);
             if(!msg.equals(""))
                 JOptionPane.showMessageDialog(null, msg);
+            return true;
         }
         catch(SQLException e){
             JOptionPane.showMessageDialog(null, e,  "Message", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
     
-    public static ResultSet getData(String query){
+    public ResultSet getData(String query){
         sec c2 = new sec();
         try{
             con = c2.connect();

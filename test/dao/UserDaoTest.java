@@ -23,8 +23,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.mockito.Matchers;
+import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.powermock.api.mockito.PowerMockito;
@@ -36,22 +39,13 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
  * @author gemyy
  */
 public class UserDaoTest {
-
-    public String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
-    public String mobileNumberPattern = "^1[0125][0-9]{8}$"; //-> Valid Number 01153212712
-    public String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"; // at least one digit, at least 8 characters, at least one lowercase, at least uppercase, at least one special character
-    public String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
-    public String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
-
-    private static User userMock;
     
     public UserDaoTest() {
     }
 
     @BeforeClass
-    public static void setUpClass()
-    {
-        userMock = mock(User.class);
+    public static void setUpClass() {
+
     }
 
     @AfterClass
@@ -70,6 +64,9 @@ public class UserDaoTest {
 
     @Test
     public void testSave() {
+        UserDao operations = new UserDao();
+        User userMock = mock(User.class);
+        DbOperations dbMock = mock(DbOperations.class);
         String data = "";
         int i = 0;
         StringTokenizer str = null;
@@ -94,7 +91,6 @@ public class UserDaoTest {
                     }
                 }
                 str = new StringTokenizer(data, "*");
-                System.out.println(data);
                 when(userMock.getName()).thenReturn(str.nextToken());
                 when(userMock.getEmail()).thenReturn(str.nextToken());
                 when(userMock.getMobileNumber()).thenReturn("0" + str.nextToken());
@@ -103,21 +99,11 @@ public class UserDaoTest {
                 when(userMock.getSecurityQuestion()).thenReturn(str.nextToken());
                 when(userMock.getAnswer()).thenReturn(str.nextToken());
                 when(userMock.getStatus()).thenReturn("false");
-                when(UserDao.save(userMock)).thenReturn(true);
-                if(i == 0)
-                {
-                    boolean expResult = true;
-                    boolean result = UserDao.save(userMock);
-                    assertEquals(expResult, result);
-                    i++;
-                }
-                else
-                {
-                    boolean expResult = false;
-                    boolean result = UserDao.save(userMock);
-                    assertEquals(expResult, result);
-                }
-                UserDao.save(userMock);
+                when(dbMock.setDataOrDelete(anyString(), anyString())).thenReturn(true);
+                boolean expResult = true;
+                boolean result = operations.save(userMock);
+                assertEquals(expResult, result);
+                verify(dbMock, times(1)).setDataOrDelete(anyString(), anyString());
                 data = "";
             }
             workbook.close();
@@ -125,11 +111,11 @@ public class UserDaoTest {
         } catch (IOException e) {
             System.out.println("fail test case");
         }
-        
     }
     
 //    @Test
 //    public void testLogin() {
+//            User user = new User();
 //        String data = "";
 //        int i = 0;
 //        StringTokenizer str = null;
@@ -154,17 +140,17 @@ public class UserDaoTest {
 //                    }
 //                }
 //                str = new StringTokenizer(data, "*");
-//                when(userMock.getEmail()).thenReturn(str.nextToken());
-//                when(userMock.getPassword()).thenReturn(str.nextToken());
+//                user.setEmail(str.nextToken());
+//                user.setPassword(str.nextToken());
 //                if(i == 0)
 //                {
-//                    User result = UserDao.login(userMock.getEmail(), userMock.getPassword());
+//                    User result = UserDao.login(user.getEmail(), user.getPassword());
 //                    assertNotNull(result);
 //                    i++;
 //                }
 //                else
 //                {
-//                    User result = UserDao.login(userMock.getEmail(), userMock.getPassword());
+//                    User result = UserDao.login(user.getEmail(), user.getPassword());
 //                    assertNull(result);
 //                }
 //                data = "";
@@ -175,7 +161,7 @@ public class UserDaoTest {
 //            System.out.println("fail test case");
 //        }
 //    }
-
+//
 //    @Test
 //    public void testGetSecurityQuestion() {
 //        User user = new User();
@@ -183,7 +169,7 @@ public class UserDaoTest {
 //        int i = 0;
 //        StringTokenizer str = null;
 //        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetSecurityQuestionUser.xlsx");
+//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetSecurityQuestion.xlsx");
 //            XSSFWorkbook workbook = new XSSFWorkbook(file);
 //            // Get the first sheet
 //            Sheet sheet = workbook.getSheetAt(0);
@@ -204,15 +190,11 @@ public class UserDaoTest {
 //                }
 //                str = new StringTokenizer(data, "*");
 //                user.setEmail(str.nextToken());
-//                System.out.println(user.getEmail());
-//                if(i == 0)
-//                {
+//                if (i == 0) {
 //                    User result = UserDao.getSecurityQuestion(user.getEmail());
 //                    assertNotNull(result);
 //                    i++;
-//                }
-//                else
-//                {
+//                } else {
 //                    User result = UserDao.getSecurityQuestion(user.getEmail());
 //                    assertNull(result);
 //                }
@@ -232,7 +214,7 @@ public class UserDaoTest {
 //        int i = 0;
 //        StringTokenizer str = null;
 //        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateUser.xlsx");
+//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateNewPassword.xlsx");
 //            XSSFWorkbook workbook = new XSSFWorkbook(file);
 //            // Get the first sheet
 //            Sheet sheet = workbook.getSheetAt(0);
@@ -254,15 +236,13 @@ public class UserDaoTest {
 //                str = new StringTokenizer(data, "*");
 //                user.setEmail(str.nextToken());
 //                user.setPassword(str.nextToken());
-//                if(user.getEmail().matches(emailPattern) && user.getPassword().matches(passwordPattern))
-//                {
-//                    assertEquals(true, true);
-//                    UserDao.update(user.getEmail(), user.getPassword());
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    UserDao.update(user.getEmail(), user.getPassword());
+//                if (i == 0) {
+//                    boolean expectedResult = true;
+//                    boolean result = UserDao.update(user.getEmail(), user.getPassword());
+//                    i++;
+//                } else {
+//                    boolean expectedResult = false;
+//                    boolean result = UserDao.update(user.getEmail(), user.getPassword());
 //                }
 //                data = "";
 //            }
@@ -280,7 +260,7 @@ public class UserDaoTest {
 //        int i = 0;
 //        StringTokenizer str = null;
 //        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetAllUserRecords.xlsx");
+//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetAllRecords.xlsx");
 //            XSSFWorkbook workbook = new XSSFWorkbook(file);
 //            // Get the first sheet
 //            Sheet sheet = workbook.getSheetAt(0);
@@ -301,15 +281,13 @@ public class UserDaoTest {
 //                }
 //                str = new StringTokenizer(data, "*");
 //                user.setEmail(str.nextToken());
-//                if(user.getEmail().matches(emailPattern))
-//                {
-//                    assertEquals(true, true);
-//                    UserDao.getAllRecords(user.getEmail());
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    UserDao.getAllRecords(user.getEmail());
+//                if (i == 0) {
+//                    ArrayList<User> result = UserDao.getAllRecords(user.getEmail());
+//                    assertNotNull(result);
+//                    i++;
+//                } else {
+//                    ArrayList<User> result = UserDao.getAllRecords(user.getEmail());
+//                    assertNull(result);
 //                }
 //                data = "";
 //            }
@@ -327,7 +305,7 @@ public class UserDaoTest {
 //        int i = 0;
 //        StringTokenizer str = null;
 //        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\ChangeStatusUser.xlsx");
+//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\ChangeStatus.xlsx");
 //            XSSFWorkbook workbook = new XSSFWorkbook(file);
 //            // Get the first sheet
 //            Sheet sheet = workbook.getSheetAt(0);
@@ -352,15 +330,15 @@ public class UserDaoTest {
 //                str = new StringTokenizer(data, "*");
 //                user.setEmail(str.nextToken());
 //                user.setStatus(str.nextToken());
-//                if(user.getEmail().matches(emailPattern))
-//                {
-//                    assertEquals(true, true);
-//                    UserDao.changeStatus(user.getEmail(), user.getStatus());
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    UserDao.changeStatus(user.getEmail(), user.getStatus());
+//                if (i == 0) {
+//                    boolean expectedResult = true;
+//                    boolean result = UserDao.changeStatus(user.getEmail(), user.getStatus());
+//                    assertEquals(expectedResult, result);
+//                    i++;
+//                } else {
+//                    boolean expectedResult = false;
+//                    boolean result = UserDao.changeStatus(user.getEmail(), user.getStatus());
+//                    assertEquals(expectedResult, result);
 //                }
 //                data = "";
 //            }
@@ -378,7 +356,7 @@ public class UserDaoTest {
 //        int i = 0;
 //        StringTokenizer str = null;
 //        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteUser.xlsx");
+//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\Delete.xlsx");
 //            XSSFWorkbook workbook = new XSSFWorkbook(file);
 //            // Get the first sheet
 //            Sheet sheet = workbook.getSheetAt(0);
@@ -399,15 +377,17 @@ public class UserDaoTest {
 //                }
 //                str = new StringTokenizer(data, "*");
 //                user.setEmail(str.nextToken());
-//                if(user.getEmail().matches(emailPattern))
 //                {
-//                    assertEquals(true, true);
-//                    UserDao.delete(user.getEmail());
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    UserDao.delete(user.getEmail());
+//                    if (i == 0) {
+//                        boolean expectedResult = true;
+//                        boolean result = UserDao.delete(user.getEmail());
+//                        assertEquals(expectedResult, result);
+//                        i++;
+//                    } else {
+//                        boolean expectedResult = false;
+//                        boolean result = UserDao.delete(user.getEmail());
+//                        assertEquals(expectedResult, result);
+//                    }
 //                }
 //                data = "";
 //            }

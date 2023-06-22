@@ -16,26 +16,32 @@ public class ClientDao {
     public static String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
     public static String IDPattern = "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$";
 
-    public static void save(Client client) {
+    public static boolean save(Client client) {
+        boolean flag = false;
         String query = "insert into client(clientId,name,cash,address,gender,phoneno,dateofbirth,nationalId,email,nationality,city,occupation,registerdate) values('" + client.getClientId() + "','" + client.getName() + "','" + client.getCash() + "','" + client.getAddress() + "','" + client.getGender() + "','" + client.getPhoneno() + "','" + client.getDateofbirth() + "','" + client.getNationalId() + "','" + client.getEmail() + "','" + client.getNationality() + "','" + client.getCity() + "','" + client.getOccupation() + "','" + client.getRegisterdate() + "')";
         if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI))
         {
             if(checkDuplicateEmail(client.getEmail()))
             {
                 JOptionPane.showMessageDialog(null, "This email already in use");
+                flag = false;
             }
             else
             {
                 DbOperations.setDataOrDelete(query, "<html><b style =\"color:blue\">Inserted Successfully</b</html>");
+                flag = true;
             }
         } 
         else
         {
             JOptionPane.showMessageDialog(null, "Invalid Data");
+            flag = false;
         }
+        return flag;
     }
 
-    public static void update(Client client) {
+    public static boolean update(Client client) {
+        boolean flag = false;
         String query = "update client set name='" + client.getName() + "',cash='" + client.getCash() + "',address='" + client.getAddress() + "',gender='" + client.getGender() + "',phoneno='" + client.getPhoneno() + "',dateofbirth='" + client.getDateofbirth() + "',nationalId='" + client.getNationalId() + "',email='" + client.getEmail() + "',nationality='" + client.getNationality() + "',city='" + client.getCity() + "',occupation='" + client.getOccupation() + "',registerdate='" + client.getRegisterdate() + "' where clientId='" + client.getClientId() + "'";
         if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI))
         {
@@ -46,24 +52,29 @@ public class ClientDao {
                 if(rs.next())
                 {
                     DbOperations.setDataOrDelete(query, "<html><b style =\"color:blue\">Updated Successfully</b</html>");
+                    flag = true;
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "User not found");
+                    flag = false;
                 }
             }
-            catch(SQLException e)
-            {
+            catch(SQLException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
+                flag = false;
             }
         } 
         else 
         {
             JOptionPane.showMessageDialog(null, "Invalid data");
+            flag = false;
         }
+        return flag;
     }
 
-    public static void updateWithNationalID(Client client) {
+    public static boolean updateWithNationalID(Client client) {
+        boolean flag = false;
         String query = "update client set name='" + client.getName() + "',cash='" + client.getCash() + "',address='" + client.getAddress() + "',gender='" + client.getGender() + "',phoneno='" + client.getPhoneno() + "',dateofbirth='" + client.getDateofbirth() + "',email='" + client.getEmail() + "',nationality='" + client.getNationality() + "',city='" + client.getCity() + "',occupation='" + client.getOccupation() + "',registerdate='" + client.getRegisterdate() + "' where clientId='" + client.getClientId() + "' and nationalId = '" + client.getNationalId() + "'";
         if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI)) 
         {
@@ -74,24 +85,30 @@ public class ClientDao {
                 if(rs.next())
                 {
                     DbOperations.setDataOrDelete(query, "<html><b style =\"color:blue\">Updated Successfully</b</html>");
+                    flag = true;
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "User not found");
+                    flag = false;
                 }
             }
             catch(SQLException e)
             {
                 JOptionPane.showMessageDialog(null, e.getMessage());
+                flag = false;
             }
         } 
         else 
         {
             JOptionPane.showMessageDialog(null, "Invalid data");
+            flag = false;
         }
+        return flag;
     }
 
-    public static void delete(Client client) {
+    public static boolean delete(Client client) {
+        boolean flag = false;
         String query = "delete from client where clientId = '" + client.getClientId() + "'";
         if (client.getClientId().matches(IDPattern))
         {
@@ -102,24 +119,30 @@ public class ClientDao {
                 if(rs.next())
                 {
                     DbOperations.setDataOrDelete(query, "<html><b style =\"color:blue\">Deleted Successfully</b</html>");
+                    flag = true;
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "User not found");
+                    flag = false;
                 }
             }
             catch(SQLException e)
             {
                 JOptionPane.showMessageDialog(null, e.getMessage());
+                flag = false;
             }
         } 
         else
         {
             JOptionPane.showMessageDialog(null, "Invalid ID");
+            flag = false;
         }
+        return flag;
     }
 
-    public static void deleteWithNationalId(Client client) {
+    public static boolean deleteWithNationalId(Client client) {
+        boolean flag = false;
         String query = "delete from client where clientId = '" + client.getClientId() + "' and nationalId = '" + client.getNationalId() + "'";
         if (client.getClientId().matches(IDPattern) && client.getNationalId().matches(NI)) 
         {
@@ -130,21 +153,26 @@ public class ClientDao {
                 if(rs.next())
                 {
                     DbOperations.setDataOrDelete(query, "<html><b style =\"color:blue\">Deleted Successfully</b</html>");
+                    flag = true;
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "User not found");
+                    flag = false;
                 }
             }
             catch(SQLException e)
             {
                 JOptionPane.showMessageDialog(null, e.getMessage());
+                flag = false;
             }
         } 
         else
         {
             JOptionPane.showMessageDialog(null, "Invalid ID");
+            flag = false;
         }
+        return flag;
     }
 
     public static ResultSet searchUpdate(String flag) {

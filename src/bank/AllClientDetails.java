@@ -14,6 +14,7 @@ import swing.EventTextField;
 public class AllClientDetails extends javax.swing.JFrame {
 
     private String usermail;
+    DbOperations db;
 
     public AllClientDetails() {
         initComponents();
@@ -42,18 +43,19 @@ public class AllClientDetails extends javax.swing.JFrame {
     }
 
     public void getAllRecords(String registerDate, int page) {
+        db = new DbOperations();
         try {
             int limit = 10;
             String sqlCount = "select count(*) from client";
             int count = 0;
-            ResultSet r = DbOperations.getData(sqlCount);
+            ResultSet r = db.getData(sqlCount);
             if (r.first()) {
                 count = r.getInt(1);
             }
             int totalPage = (int) Math.ceil(count / limit);
             pagination1.setPagegination(page, totalPage);
             ArrayList<Client> list = new ArrayList<>();
-            ResultSet rs = DbOperations.getData("select *from client where registerdate like '%" + registerDate + "%' limit " + (page - 1) * limit + " ," + limit);
+            ResultSet rs = db.getData("select *from client where registerdate like '%" + registerDate + "%' limit " + (page - 1) * limit + " ," + limit);
             while (rs.next()) {
                 Client client = new Client();
                 client.setClientId(String.valueOf(rs.getInt("clientId")));

@@ -190,10 +190,11 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        UserDao operations = new UserDao();
         String email = txtEmail.getText();
         String password = txtPassword.getText();
         User user = null;
-        user = UserDao.login(email, password);
+        user = operations.login(email, password);
         if (user == null) {
             JOptionPane.showMessageDialog(null, "<html><b style =\"color:blue\">Incorrect Username or Password</b</html>", "Message", JOptionPane.ERROR_MESSAGE);
         } else {

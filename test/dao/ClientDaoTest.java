@@ -29,12 +29,6 @@ import static org.junit.Assert.*;
  * @author gemyy
  */
 public class ClientDaoTest {
-    public String emailPattern = "^[A-Za-z]{5}\\d+@[A-Za-z]+\\.[A-Za-z]{2,6}$"; //valid email -> gemyy555@gmail.com
-    public String mobileNumberPattern = "^01[0125][0-9]{8}$"; //maximum 11 digit, must start with 01[0125]
-    public String namePattern = "^[A-Z][a-z]*(\\s+[A-Z][a-z]*)*$"; // valid name -> Gamal Ahmed
-    public String NI = "^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$";
-    public String addressPattern = "^(\\d{1,}) [a-zA-Z0-9\\s]+(,)? [a-zA-Z]+(/s)?+[a-zA-Z]+(,)? [A-Z]{2} [0-9]{5,6}$";
-    public String IDPattern = "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$";
 
     public ClientDaoTest() {
     }
@@ -95,15 +89,18 @@ public class ClientDaoTest {
                 client.setCity(str.nextToken());
                 client.setOccupation(str.nextToken());
                 client.setRegisterdate(str.nextToken());
-                if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI))
+                if (i == 0)
                 {
-                    assertEquals(true, true);
-                    ClientDao.save(client);
+                    boolean expectedResult = true;
+                    boolean result = ClientDao.save(client);
+                    assertEquals(expectedResult, result);
+                    i++;
                 }
                 else
                 {
-                    assertEquals(false, false);
-                    ClientDao.save(client);
+                    boolean expectedResult = false;
+                    boolean result = ClientDao.save(client);
+                    assertEquals(expectedResult, result);
                 }
                 data = "";
             }
@@ -114,359 +111,373 @@ public class ClientDaoTest {
         }
     }
 
-//    @Test
-//    public void testUpdate() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateClient.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                client.setName(str.nextToken());
-//                client.setCash(Integer.parseInt(str.nextToken()));
-//                client.setAddress(str.nextToken());
-//                client.setGender(str.nextToken());
-//                client.setPhoneno("0" + str.nextToken());
-//                client.setDateofbirth(str.nextToken());
-//                client.setNationalId(str.nextToken());
-//                client.setEmail(str.nextToken());
-//                client.setNationality(str.nextToken());
-//                client.setCity(str.nextToken());
-//                client.setOccupation(str.nextToken());
-//                client.setRegisterdate(str.nextToken());
-//                if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI))
-//                {
-//                    assertEquals(true, true);
-//                    ClientDao.update(client);
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    ClientDao.update(client);
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
+    @Test
+    public void testUpdate() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateClient.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                client.setName(str.nextToken());
+                client.setCash(Integer.parseInt(str.nextToken()));
+                client.setAddress(str.nextToken());
+                client.setGender(str.nextToken());
+                client.setPhoneno("0" + str.nextToken());
+                client.setDateofbirth(str.nextToken());
+                client.setNationalId(str.nextToken());
+                client.setEmail(str.nextToken());
+                client.setNationality(str.nextToken());
+                client.setCity(str.nextToken());
+                client.setOccupation(str.nextToken());
+                client.setRegisterdate(str.nextToken());
+                if (i == 0)
+                {
+                    boolean expectedResult = true;
+                    boolean result = ClientDao.update(client);
+                    assertEquals(expectedResult, result);
+                    i++;
+                }
+                else
+                {
+                    boolean expectedResult = false;
+                    boolean result = ClientDao.update(client);
+                    assertEquals(expectedResult, result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 
-//    @Test
-//    public void testUpdateWithNationalID() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateClient.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                client.setName(str.nextToken());
-//                client.setCash(Integer.parseInt(str.nextToken()));
-//                client.setAddress(str.nextToken());
-//                client.setGender(str.nextToken());
-//                client.setPhoneno("0" + str.nextToken());
-//                client.setDateofbirth(str.nextToken());
-//                client.setNationalId(str.nextToken());
-//                client.setEmail(str.nextToken());
-//                client.setNationality(str.nextToken());
-//                client.setCity(str.nextToken());
-//                client.setOccupation(str.nextToken());
-//                client.setRegisterdate(str.nextToken());
-//                if (client.getClientId().matches(IDPattern) && client.getName().matches(namePattern) && client.getAddress().matches(addressPattern) && client.getPhoneno().matches(mobileNumberPattern) && client.getEmail().matches(emailPattern) && client.getNationalId().matches(NI))
-//                {
-//                    assertEquals(true, true);
-//                    ClientDao.update(client);
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    ClientDao.update(client);
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
+    @Test
+    public void testUpdateWithNationalID() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\UpdateClient.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                client.setName(str.nextToken());
+                client.setCash(Integer.parseInt(str.nextToken()));
+                client.setAddress(str.nextToken());
+                client.setGender(str.nextToken());
+                client.setPhoneno("0" + str.nextToken());
+                client.setDateofbirth(str.nextToken());
+                client.setNationalId(str.nextToken());
+                client.setEmail(str.nextToken());
+                client.setNationality(str.nextToken());
+                client.setCity(str.nextToken());
+                client.setOccupation(str.nextToken());
+                client.setRegisterdate(str.nextToken());
+                if (i == 0)
+                {
+                    boolean expectedResult = true;
+                    boolean result = ClientDao.updateWithNationalID(client);
+                    assertEquals(expectedResult, result);
+                    i++;
+                }
+                else
+                {
+                    boolean expectedResult = false;
+                    boolean result = ClientDao.deleteWithNationalId(client);
+                    assertEquals(expectedResult, result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 
-//    @Test
-//    public void testDelete() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                if(client.getClientId().matches(IDPattern))
-//                {
-//                    assertEquals(true, true);
-//                    ClientDao.delete(client);
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    ClientDao.delete(client);
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
+    @Test
+    public void testDelete() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                if (i == 0)
+                {
+                    boolean expectedResult = true;
+                    boolean result = ClientDao.delete(client);
+                    assertEquals(expectedResult, result);
+                    i++;
+                }
+                else
+                {
+                    boolean expectedResult = false;
+                    boolean result = ClientDao.delete(client);
+                    assertEquals(expectedResult, result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 
-//    @Test
-//    public void testDeleteWithNationalID() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClientWithNationalID.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                client.setNationalId(str.nextToken());
-//                if(client.getClientId().matches(IDPattern) && client.getNationalId().matches(NI))
-//                {
-//                    assertEquals(true, true);
-//                    ClientDao.deleteWithNationalId(client);
-//                }
-//                else
-//                {
-//                    assertEquals(false, false);
-//                    ClientDao.deleteWithNationalId(client);
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
-//
-//
-//    @Test
-//    public void testSearchUpdate() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                {
-//                    if (i == 0) {
-//                        assertEquals(true, Client.testDeleteClient(client));
-//                        ClientDao.searchUpdate(client.getClientId());
-//                        i++;
-//                    } else {
-//                        assertEquals(false, Client.testDeleteClient(client));
-//                        ClientDao.searchUpdate(client.getClientId());
-//                    }
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
-//
-//    @Test
-//    public void testSearchDelete() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setClientId(str.nextToken());
-//                {
-//                    if (i == 0) {
-//                        assertEquals(true, Client.testDeleteClient(client));
-//                        ClientDao.searchDelete(client.getClientId());
-//                        i++;
-//                    } else {
-//                        assertEquals(false, Client.testDeleteClient(client));
-//                        ClientDao.searchDelete(client.getClientId());
-//                    }
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
-//
-//    @Test
-//    public void testGetAllRecords() {
-//        Client client = new Client();
-//        String data = "";
-//        int i = 0;
-//        StringTokenizer str = null;
-//        try {
-//            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetAllClientRecords.xlsx");
-//            XSSFWorkbook workbook = new XSSFWorkbook(file);
-//            // Get the first sheet
-//            Sheet sheet = workbook.getSheetAt(0);
-//            // Iterate over rows
-//            for (Row row : sheet) {
-//                // Iterate over cells
-//                for (Cell cell : row) {
-//                    // Print cell value
-//                    switch (cell.getCellType()) {
-//                        case Cell.CELL_TYPE_STRING:
-//                            data += cell.getStringCellValue() + "*";
-//                            break;
-//                        case Cell.CELL_TYPE_NUMERIC:
-//                            data += (int) cell.getNumericCellValue() + "*";
-//                            break;
-//                        default:
-//                    }
-//                }
-//                str = new StringTokenizer(data, "*");
-//                client.setNationalId(str.nextToken());
-//                {
-//                    if (i == 0) {
-//                        assertEquals(true, Client.testGetAllRecords(client));
-//                        ClientDao.getAllRecords(client.getNationalId());
-//                        i++;
-//                    } else {
-//                        assertEquals(false, Client.testGetAllRecords(client));
-//                        ClientDao.getAllRecords(client.getNationalId());
-//                    }
-//                }
-//                data = "";
-//            }
-//            workbook.close();
-//            file.close();
-//        } catch (IOException e) {
-//            System.out.println("fail test case");
-//        }
-//    }
+    @Test
+    public void testDeleteWithNationalID() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClientWithNationalID.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                client.setNationalId(str.nextToken());
+                if (i == 0)
+                {
+                    boolean expectedResult = true;
+                    boolean result = ClientDao.deleteWithNationalId(client);
+                    assertEquals(expectedResult, result);
+                    i++;
+                }
+                else
+                {
+                    boolean expectedResult = false;
+                    boolean result = ClientDao.deleteWithNationalId(client);
+                    assertEquals(expectedResult, result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 
+
+    @Test
+    public void testSearchUpdate() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                if (i == 0)
+                {
+                    ResultSet result = ClientDao.searchUpdate(client.getClientId());
+                    assertNotNull(result);
+                    i++;
+                }
+                else
+                {
+                    ResultSet result = ClientDao.searchUpdate(client.getClientId());
+                    assertNull(result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testSearchDelete() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\DeleteClient.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setClientId(str.nextToken());
+                if (i == 0)
+                {
+                    ResultSet result = ClientDao.searchDelete(client.getClientId());
+                    assertNotNull(result);
+                    i++;
+                }
+                else
+                {
+                    ResultSet result = ClientDao.searchDelete(client.getClientId());
+                    assertNull(result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
+
+    @Test
+    public void testGetAllRecords() {
+        Client client = new Client();
+        String data = "";
+        int i = 0;
+        StringTokenizer str = null;
+        try {
+            FileInputStream file = new FileInputStream("C:\\Users\\gemyy\\OneDrive\\Desktop\\Test\\GetAllClientRecords.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            // Get the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+            // Iterate over rows
+            for (Row row : sheet) {
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Print cell value
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            data += cell.getStringCellValue() + "*";
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            data += (int) cell.getNumericCellValue() + "*";
+                            break;
+                        default:
+                    }
+                }
+                str = new StringTokenizer(data, "*");
+                client.setNationalId(str.nextToken());
+                if (i == 0)
+                {
+                    ArrayList<Client> result = ClientDao.getAllRecords(client.getClientId());
+                    assertNotNull(result);
+                    i++;
+                }
+                else
+                {
+                    ArrayList<Client> result = ClientDao.getAllRecords(client.getClientId());
+                    assertNull(result);
+                }
+                data = "";
+            }
+            workbook.close();
+            file.close();
+        } catch (IOException e) {
+            System.out.println("fail test case");
+        }
+    }
 }
